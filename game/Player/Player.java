@@ -11,13 +11,23 @@ public class Player {
     private Image imagem;
     private int altura, largura;
 
-    public Player() {
-        this.x = 380;
+    private int upKey;
+    private int downKey;
+    private int leftKey;
+    private int rightKey;
+
+    public Player(int x, int upKey, int downKey, int leftKey, int rightKey) {
+        this.x = x;
         this.y = 475;
+
+        this.upKey = upKey;
+        this.downKey = downKey;
+        this.leftKey = leftKey;
+        this.rightKey = rightKey;
     }
 
-    public void load() {
-        ImageIcon ref = new ImageIcon("assets\\sprites\\players\\p2-spaceship.png");
+    public void load(String path) {
+        ImageIcon ref = new ImageIcon(path);
         imagem = ref.getImage();
         imagem = imagem.getScaledInstance(150, 150, Image.SCALE_DEFAULT);
         altura = imagem.getHeight(null);
@@ -32,13 +42,13 @@ public class Player {
     public void keyPressed(KeyEvent tecla) {
         int codigo = tecla.getKeyCode();
 
-        if(codigo == KeyEvent.VK_UP) {
+        if(codigo == upKey) {
             dy = -3;
-        } else if (codigo == KeyEvent.VK_DOWN) {
+        } else if (codigo == downKey) {
             dy = 3;
-        } else if (codigo == KeyEvent.VK_LEFT) {
+        } else if (codigo == leftKey) {
             dx = -4;
-        } else if (codigo == KeyEvent.VK_RIGHT) {
+        } else if (codigo == rightKey) {
             dx = 4;
         }
     }
@@ -46,13 +56,13 @@ public class Player {
     public void keyRelease(KeyEvent tecla) {
         int codigo = tecla.getKeyCode();
 
-        if(codigo == KeyEvent.VK_UP) {
+        if(codigo == upKey) {
             dy = 0;
-        } else if (codigo == KeyEvent.VK_DOWN) {
+        } else if (codigo == downKey) {
             dy = 0;
-        } else if (codigo == KeyEvent.VK_LEFT) {
+        } else if (codigo == leftKey) {
             dx = 0;
-        } else if (codigo == KeyEvent.VK_RIGHT) {
+        } else if (codigo == rightKey) {
             dx = 0;
         }
     }
