@@ -1,14 +1,13 @@
 package Container;
+import Fases.Fase;
 
 import javax.swing.JFrame;
 
-import Fases.Fase;
-
 public class Container extends JFrame {
-    public Container(Fase fase){
+    public Container(Fase fase) {
         add(fase);
         setTitle("Cosmic Odyssey: Luzes do Infinito");
-        setSize(500, 500);
+        setSize(900, 675);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
         this.setResizable(false);
