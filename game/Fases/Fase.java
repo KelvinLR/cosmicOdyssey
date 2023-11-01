@@ -3,7 +3,6 @@ package Fases;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
-import java.nio.file.Path;
 
 import javax.swing.ImageIcon;
 import javax.swing.JPanel;
