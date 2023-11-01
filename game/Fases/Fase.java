@@ -3,6 +3,7 @@ package Fases;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
+import java.nio.file.Path;
 
 import javax.swing.ImageIcon;
 import javax.swing.JPanel;
@@ -10,8 +11,8 @@ import javax.swing.JPanel;
 public class Fase extends JPanel{
     private Image background;
 
-    public Fase() {
-        ImageIcon ref = new ImageIcon("assets\\scenario\\scenario.jpeg");
+    public Fase(String path) {
+        ImageIcon ref = new ImageIcon(path);
         background = ref.getImage();
     }
 

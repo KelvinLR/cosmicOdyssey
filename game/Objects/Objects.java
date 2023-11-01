@@ -1,4 +1,4 @@
-package Objects;
+/*package Objects;
 
 import java.awt.image.BufferedImage;
 
@@ -16,7 +16,7 @@ public class Objects {
         this.height = height;
         this.sprite = sprite;
     }
-    
+
     public double getX() {
         return this.x;
     }
@@ -57,4 +57,8 @@ public class Objects {
         this.sprite = sprite;
     }
 
-}
+    public void render(Graphics graph) {
+        graph.drawImage(sprite, this.getX(), this.getY(), null);
+    }
+
+}*/
