@@ -5,7 +5,7 @@ import java.awt.event.MouseEvent;
 import javax.swing.ImageIcon;
 import java.util.ArrayList;
 
-public class Player {
+public class Player2 {
     
     private int x,y;
     private int dx, dy;
@@ -13,10 +13,10 @@ public class Player {
     private int altura, largura;
     private ArrayList <Tiro> tiros;
 
-    public Player()
+    public Player2()
     {
         this.x = 100;
-        this.y = 100;
+        this.y = 150;
 
         tiros = new ArrayList<Tiro>();
     }
@@ -45,54 +45,53 @@ public class Player {
     {   
         int codigo = tecla.getKeyCode();
 
-        if(codigo == KeyEvent.VK_W)
+        if(codigo == KeyEvent.VK_UP)
         {
             dy = -3;
         }
 
-        if(codigo == KeyEvent.VK_S)
+        if(codigo == KeyEvent.VK_DOWN)
         {
             dy = 3;
         }
 
-        if(codigo == KeyEvent.VK_A)
+        if(codigo == KeyEvent.VK_LEFT)
         {
             dx = -3;
         }
 
-        if(codigo == KeyEvent.VK_D)
+        if(codigo == KeyEvent.VK_RIGHT)
         {
             dx = 3;
         }
         
-    }
-
-    public void mousePressed(MouseEvent evento) {
-        if (evento.getButton() == MouseEvent.BUTTON1) {
+        if(codigo == KeyEvent.VK_COMMA)
+        {
             tiroSimples();
         }
     }
+
 
     public void keyReleased(KeyEvent tecla)
     {   
         int codigo = tecla.getKeyCode();
 
-        if(codigo == KeyEvent.VK_W)
+        if(codigo == KeyEvent.VK_UP)
         {
             dy = 0;
         }
 
-        if(codigo == KeyEvent.VK_S)
+        if(codigo == KeyEvent.VK_DOWN)
         {
             dy = 0;
         }
 
-        if(codigo == KeyEvent.VK_A)
+        if(codigo == KeyEvent.VK_LEFT)
         {
             dx = 0;
         }
 
-        if(codigo == KeyEvent.VK_D)
+        if(codigo == KeyEvent.VK_RIGHT)
         {
             dx = 0;
         }

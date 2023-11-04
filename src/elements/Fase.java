@@ -18,7 +18,8 @@ import java.util.ArrayList;
 public class Fase extends JPanel implements ActionListener, MouseListener {
     
     private Image fundo;
-    private Player player1;
+    private Player1 player1;
+    private Player2 player2;
     private Timer timer;
     private ArrayList <Inimigo1> inimigos1;
 
@@ -33,11 +34,15 @@ public class Fase extends JPanel implements ActionListener, MouseListener {
 
         //setBackground(Color.black);
 
-        player1 = new Player();
+        player1 = new Player1();
         player1.load();
 
+        player2 = new Player2();
+        player2.load();
+
         addKeyListener(new TecladoAdapter());
-        addMouseListener(new MouseAdaptado());
+        addKeyListener(new TecladoAdapter());
+       // addMouseListener(new MouseAdaptado());
 
         Timer timer = new Timer(5,this);
         timer.start();
@@ -63,11 +68,21 @@ public class Fase extends JPanel implements ActionListener, MouseListener {
         graficos.drawImage(fundo, 0, 0, null);
         graficos.drawImage(player1.getImagem(),player1.getX(),player1.getY(),this);
 
+        graficos.drawImage(player2.getImagem(),player2.getX(),player2.getY(),this);
+
         ArrayList<Tiro> tiros = player1.getTiros();
+
+        ArrayList<Tiro> tiros2 = player2.getTiros();
 
         for(int i=0 ; i < tiros.size() ; i++)
         {
             Tiro t = tiros.get(i);
+            t.load();
+            graficos.drawImage(t.getImagem(),t.getX(),t.getY(),this);
+        }
+         for(int i=0 ; i < tiros2.size() ; i++)
+        {
+            Tiro t = tiros2.get(i);
             t.load();
             graficos.drawImage(t.getImagem(),t.getX(),t.getY(),this);
         }
@@ -79,14 +94,19 @@ public class Fase extends JPanel implements ActionListener, MouseListener {
             graficos.drawImage(in.getImagem(),in.getX(),in.getY(),this);
         }
 
+
+
         g.dispose();
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
         player1.update();
+        player2.update();
+
 
         ArrayList<Tiro> tiros = player1.getTiros();
+        ArrayList<Tiro> tiros2 = player2.getTiros();
 
         for(int i=0 ; i < tiros.size() ; i++)
         {
@@ -98,6 +118,15 @@ public class Fase extends JPanel implements ActionListener, MouseListener {
             }
         }
 
+        for(int i=0 ; i < tiros2.size() ; i++)
+        {
+            if(tiros2.get(i).isVisible()){
+                tiros2.get(i).update();
+            }
+            else{
+                tiros2.remove(i);
+            }
+        }
         for(int i=0 ; i < inimigos1.size() ; i++)
         {
             Inimigo1 in = inimigos1.get(i);
@@ -117,20 +146,24 @@ public class Fase extends JPanel implements ActionListener, MouseListener {
         @Override
         public void keyPressed(KeyEvent e) {
             player1.keyPressed(e);
+            player2.keyPressed(e);
         }
+        
     
         @Override
         public void keyReleased(KeyEvent e) {
             player1.keyReleased(e);
+            player2.keyReleased(e);
+
         }
     }
 
-     private class MouseAdaptado extends MouseAdapter {
-        @Override
-        public void mousePressed(MouseEvent e) {
-            player1.mousePressed(e);
-        }
-    }
+    //  private class MouseAdaptado extends MouseAdapter {
+    //     @Override
+    //     public void mousePressed(MouseEvent e) {
+    //         player1.mousePressed(e);
+    //     }
+    // }
 
     @Override
     public void mouseClicked(MouseEvent e) {

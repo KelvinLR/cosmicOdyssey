@@ -13,12 +13,12 @@ import javax.swing.ImageIcon;
 import javax.swing.JPanel;
 import javax.swing.Timer;
 
-import Player.Player;
+import Player.Player1;
 
 public class Fase extends JPanel implements ActionListener {
     private Image background;
-    private Player player1;
-    private Player player2;
+    private Player1 player1;
+    private Player1 player2;
     private Timer timer;
     
     public Fase(String path) {
@@ -28,10 +28,10 @@ public class Fase extends JPanel implements ActionListener {
         ImageIcon ref = new ImageIcon(path);
         background = ref.getImage();
 
-        player1 = new Player(190, KeyEvent.VK_UP, KeyEvent.VK_DOWN, KeyEvent.VK_LEFT, KeyEvent.VK_RIGHT);
+        player1 = new Player1(190, KeyEvent.VK_UP, KeyEvent.VK_DOWN, KeyEvent.VK_LEFT, KeyEvent.VK_RIGHT);
         player1.load("assets\\sprites\\players\\p1-spaceship.png");
 
-        player2 = new Player(570, KeyEvent.VK_W, KeyEvent.VK_S, KeyEvent.VK_A, KeyEvent.VK_D);
+        player2 = new Player1(570, KeyEvent.VK_W, KeyEvent.VK_S, KeyEvent.VK_A, KeyEvent.VK_D);
         player2.load("assets\\sprites\\players\\p2-spaceship.png");
 
         addKeyListener(new TecladoAdapter());

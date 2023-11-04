@@ -5,7 +5,7 @@ import java.awt.event.KeyEvent;
 
 import javax.swing.ImageIcon;
 
-public class Player {
+public class Player1 {
     private int x, y;
     private int dx, dy;
     private Image imagem;
@@ -16,7 +16,7 @@ public class Player {
     private int leftKey;
     private int rightKey;
 
-    public Player(int x, int upKey, int downKey, int leftKey, int rightKey) {
+    public Player1(int x, int upKey, int downKey, int leftKey, int rightKey) {
         this.x = x;
         this.y = 475;
 
