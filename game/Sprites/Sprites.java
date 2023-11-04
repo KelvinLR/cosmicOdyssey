@@ -1,3 +1,4 @@
+/*
 package Sprites;
 
 import java.awt.image.BufferedImage;
@@ -20,3 +21,4 @@ public class Sprites {
         return sprite.getSubimage(x, y, width, height);
     }
 }
+*/

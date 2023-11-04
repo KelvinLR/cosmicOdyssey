@@ -60,5 +60,4 @@ public class Objects {
     public void render(Graphics graph) {
         graph.drawImage(sprite, this.getX(), this.getY(), null);
     }
-
 }*/
