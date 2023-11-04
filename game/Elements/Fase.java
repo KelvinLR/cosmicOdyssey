@@ -1,6 +1,4 @@
-package Fases;
-
-import Tiros.Tiro;
+package Elements;
 
 import java.util.List;
 
@@ -17,8 +15,6 @@ import javax.swing.ImageIcon;
 import javax.swing.JPanel;
 import javax.swing.Timer;
 
-import Player.Player;
-
 public class Fase extends JPanel implements ActionListener {
     private Image background;
     private Player player1;
@@ -32,10 +28,10 @@ public class Fase extends JPanel implements ActionListener {
         ImageIcon ref = new ImageIcon(path);
         background = ref.getImage();
 
-        player1 = new Player(190, KeyEvent.VK_W, KeyEvent.VK_S, KeyEvent.VK_A, KeyEvent.VK_D, KeyEvent.VK_E);
-        player1.load("assets\\sprites\\players\\p1-spaceship-animated.gif");
+        player1 = new Player(190, KeyEvent.VK_W, KeyEvent.VK_S, KeyEvent.VK_A, KeyEvent.VK_D, KeyEvent.VK_SPACE);
+        player1.load("assets\\sprites\\players\\p1-spaceship.png");
 
-        player2 = new Player(570, KeyEvent.VK_UP, KeyEvent.VK_DOWN, KeyEvent.VK_LEFT, KeyEvent.VK_RIGHT, KeyEvent.VK_SPACE);
+        player2 = new Player(570, KeyEvent.VK_UP, KeyEvent.VK_DOWN, KeyEvent.VK_LEFT, KeyEvent.VK_RIGHT, KeyEvent.VK_SHIFT);
         player2.load("assets\\sprites\\players\\p2-spaceship.png");
 
         addKeyListener(new TecladoAdapter());

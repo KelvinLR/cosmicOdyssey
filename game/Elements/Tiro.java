@@ -1,4 +1,4 @@
-package Tiros;
+package Elements;
 
 import java.awt.Image;
 
@@ -10,7 +10,7 @@ public class Tiro {
     private int largura, altura;
     private boolean isVisible;
 
-    private static final int LARGURA = 838;  //No caso altura
+    private static final int ALTURA = 40;
     private static int VELOCIDADE = 2;
 
     public Tiro(int x, int y) {
@@ -31,7 +31,7 @@ public class Tiro {
     public void update() {
         this.y -= VELOCIDADE;   //Adaptado
 
-        if(this.x > LARGURA) 
+        if(this.y < ALTURA) 
             isVisible = false;
     }
 

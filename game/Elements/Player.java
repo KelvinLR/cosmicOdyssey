@@ -1,6 +1,4 @@
-package Player;
-
-import Tiros.Tiro;
+package Elements;
 
 import java.util.List;
 import java.util.ArrayList;
