@@ -20,7 +20,7 @@ public class Tiro {
     }
 
     public void load() {
-        ImageIcon ref = new ImageIcon("assets\\sprites\\tiros\\bala1.png");
+        ImageIcon ref = new ImageIcon("assets\\sprites\\tiros\\tiro2.png");
         imagem = ref.getImage();
         //imagem = imagem.getScaledInstance(40, 33, Image.SCALE_DEFAULT);
         

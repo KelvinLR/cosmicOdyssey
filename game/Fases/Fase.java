@@ -33,7 +33,7 @@ public class Fase extends JPanel implements ActionListener {
         background = ref.getImage();
 
         player1 = new Player(190, KeyEvent.VK_W, KeyEvent.VK_S, KeyEvent.VK_A, KeyEvent.VK_D, KeyEvent.VK_E);
-        player1.load("assets\\sprites\\players\\p1-spaceship.png");
+        player1.load("assets\\sprites\\players\\p1-spaceship-animated.gif");
 
         player2 = new Player(570, KeyEvent.VK_UP, KeyEvent.VK_DOWN, KeyEvent.VK_LEFT, KeyEvent.VK_RIGHT, KeyEvent.VK_SPACE);
         player2.load("assets\\sprites\\players\\p2-spaceship.png");

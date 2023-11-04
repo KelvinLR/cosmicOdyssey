@@ -25,7 +25,7 @@ public class Player {
 
     public Player(int x, int upKey, int downKey, int leftKey, int rightKey, int shotKey) {
         this.x = x;
-        this.y = 490;
+        this.y = 520;
 
         this.upKey = upKey;
         this.downKey = downKey;
@@ -39,7 +39,7 @@ public class Player {
     public void load(String path) {
         ImageIcon ref = new ImageIcon(path);
         imagem = ref.getImage();
-        imagem = imagem.getScaledInstance(120, 120, Image.SCALE_DEFAULT);
+        imagem = imagem.getScaledInstance(100, 100, Image.SCALE_DEFAULT);
         
         altura = imagem.getHeight(null);
         largura = imagem.getWidth(null);
@@ -52,8 +52,8 @@ public class Player {
 
     public void tiroSimples() {
         //this.tiros.add(new Tiro(x + largura, y + (altura/2)));  //Sai do meio, adaptar pra sair dos lados
-        this.tiros.add(new Tiro(x + 24, y));
-        this.tiros.add(new Tiro(x + 71, y));
+        this.tiros.add(new Tiro(x + 28, y));
+        this.tiros.add(new Tiro(x + 67, y));
     }
 
     public void keyPressed(KeyEvent tecla) {
