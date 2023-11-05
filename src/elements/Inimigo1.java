@@ -1,6 +1,8 @@
 package elements;
 
 import java.awt.Image;
+import java.awt.Rectangle;
+
 import javax.swing.ImageIcon;
 
 
@@ -36,6 +38,10 @@ public class Inimigo1 {
             //isVisible = false;
     }
 
+    public Rectangle getBounds(){
+        return new Rectangle(x,y,largura,altura);
+    }
+    
     public int getX() {
         return x;
     }

@@ -1,5 +1,6 @@
 package elements;
 import java.awt.Image;
+import java.awt.Rectangle;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import javax.swing.ImageIcon;
@@ -12,12 +13,14 @@ public class Player2 {
     private Image imagem;
     private int altura, largura;
     private ArrayList <Tiro> tiros;
+    private boolean isVisible;
 
+    
     public Player2()
     {
         this.x = 100;
         this.y = 150;
-
+        this.isVisible = true;
         tiros = new ArrayList<Tiro>();
     }
 
@@ -34,6 +37,10 @@ public class Player2 {
     {
         x += dx;
         y += dy;
+    }
+
+    public Rectangle getBounds(){
+        return new Rectangle(x,y,largura,altura );
     }
 
     public void tiroSimples()
@@ -113,6 +120,12 @@ public class Player2 {
         return tiros;
     }
 
-    
+    public boolean isVisible() {
+        return isVisible;
+    }
+
+    public void setVisible(boolean isVisible) {
+        this.isVisible = isVisible;
+    }    
 
 }

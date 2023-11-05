@@ -1,6 +1,8 @@
 package elements;
 
 import java.awt.Image;
+import java.awt.Rectangle;
+
 import javax.swing.ImageIcon;
 
 
@@ -34,6 +36,10 @@ public class Tiro {
         this.x += VELOCIDADE;
           if(this.x > LARGURA)
             isVisible = false;
+    }
+
+    public Rectangle getBounds(){
+        return new Rectangle(x,y,largura,altura );
     }
 
     public int getX() {
