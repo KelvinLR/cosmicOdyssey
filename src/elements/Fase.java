@@ -1,9 +1,8 @@
 package elements;
-import java.awt.Color;
+//import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
-import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
@@ -15,15 +14,15 @@ import javax.swing.ImageIcon;
 import javax.swing.JPanel;
 import javax.swing.Timer;
 import java.util.ArrayList;
+import java.util.List;
 
 public class Fase extends JPanel implements ActionListener, MouseListener {
     
     private Image fundo;
-    private Player1 player1;
-    private Player2 player2;
+    private Player player1;
     private Timer timer;
     private ArrayList <Inimigo1> inimigos1;
-    private boolean emJogo;  
+    private ArrayList <Inimigo2> inimigos2;
 
     public Fase()
     {
@@ -36,74 +35,81 @@ public class Fase extends JPanel implements ActionListener, MouseListener {
 
         //setBackground(Color.black);
 
-        player1 = new Player1();
+        player1 = new Player();
         player1.load();
 
-        player2 = new Player2();
-        player2.load();
-
         addKeyListener(new TecladoAdapter());
-        addKeyListener(new TecladoAdapter());
-       // addMouseListener(new MouseAdaptado());
+        addMouseListener(new MouseAdaptado());
 
         Timer timer = new Timer(5,this);
         timer.start();
 
         inicializaInimigos();
-        emJogo = true;   
     }
 
     public void inicializaInimigos()
     {
         int cordenadas[] = new int[40];
-        inimigos1 = new ArrayList<Inimigo1>();
 
+        inimigos1 = new ArrayList<Inimigo1>();
         for (int i = 0; i < cordenadas.length; i++) {
 			int x = (int) ((Math.random() * 8000) + 1024);
 			int y = (int) ((Math.random() * 650) + 30);
             inimigos1.add(new Inimigo1(x, y));
 		}
+
+        inimigos2 = new ArrayList<Inimigo2>();
+        for (int i = 0; i < cordenadas.length; i++) {
+			int x = (int) ((Math.random() * 12000) + 1024);
+			int y = (int) ((Math.random() * 650) + 30);
+            inimigos2.add(new Inimigo2(x, y));
+		}
+
     }
 
     public void paint(Graphics g)
     {
         Graphics2D graficos = (Graphics2D) g;
-        if(emJogo==true){
+        graficos.drawImage(fundo, 0, 0, null);
+        graficos.drawImage(player1.getImagem(),player1.getX(),player1.getY(),this);
 
-            graficos.drawImage(fundo, 0, 0, null);
-            graficos.drawImage(player1.getImagem(),player1.getX(),player1.getY(),this);
-    
-            graficos.drawImage(player2.getImagem(),player2.getX(),player2.getY(),this);
-    
-            ArrayList<Tiro> tiros = player1.getTiros();
-    
-            ArrayList<Tiro> tiros2 = player2.getTiros();
-    
-            for(int i=0 ; i < tiros.size() ; i++)
-            {
-                Tiro t = tiros.get(i);
-                t.load();
-                graficos.drawImage(t.getImagem(),t.getX(),t.getY(),this);
-            }
-             for(int i=0 ; i < tiros2.size() ; i++)
-            {
-                Tiro t = tiros2.get(i);
-                t.load();
-                graficos.drawImage(t.getImagem(),t.getX(),t.getY(),this);
-            }
-    
-            for(int i=0 ; i < inimigos1.size() ; i++)
-            {
-                Inimigo1 in = inimigos1.get(i);
-                in.load();
-                graficos.drawImage(in.getImagem(),in.getX(),in.getY(),this);
-            }
-        }else{
-             ImageIcon fimJogo = new ImageIcon("res//Paineis//fimdejogo.png");
-             graficos.drawImage(fimJogo.getImage(), 0, 0, null);
+        ArrayList<Tiro> tiros = player1.getTiros();
+
+        //Tiros do Player
+        for(int i=0 ; i < tiros.size() ; i++)
+        {
+            Tiro t = tiros.get(i);
+            t.load();
+            graficos.drawImage(t.getImagem(),t.getX(),t.getY(),this);
+        }
+        //////////////////////////////////////////////////////////////////////////////
+
+        //Inimigos 1
+        for(int i=0 ; i < inimigos1.size() ; i++)
+        {
+            Inimigo1 in = inimigos1.get(i);
+            in.load();
+            graficos.drawImage(in.getImagem(),in.getX(),in.getY(),this);
+        }
+        //////////////////////////////////////////////////////////////////////////////
+
+        //Inimigos 2 e seus Tiros
+        for(int i=0 ; i < inimigos2.size() ; i++)
+        {
+            Inimigo2 in = inimigos2.get(i);
+            in.load();
+            graficos.drawImage(in.getImagem(),in.getX(),in.getY(),this);
         }
 
-
+			for (int i = 0; i < inimigos2.size(); i++) {
+				List<Tiro_Inimigo2> tirosInimigo = inimigos2.get(i).getTiroInimigo();
+				for (int o = 0; o < tirosInimigo.size(); o++) {
+					Tiro_Inimigo2 m = (Tiro_Inimigo2) tirosInimigo.get(o);
+					m.load();
+					graficos.drawImage(m.getImagem(), m.getX(), m.getY(), this);
+				}
+			}
+        //////////////////////////////////////////////////////////////////////////////
 
         g.dispose();
     }
@@ -111,11 +117,8 @@ public class Fase extends JPanel implements ActionListener, MouseListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         player1.update();
-        player2.update();
-
 
         ArrayList<Tiro> tiros = player1.getTiros();
-        ArrayList<Tiro> tiros2 = player2.getTiros();
 
         for(int i=0 ; i < tiros.size() ; i++)
         {
@@ -127,15 +130,6 @@ public class Fase extends JPanel implements ActionListener, MouseListener {
             }
         }
 
-        for(int i=0 ; i < tiros2.size() ; i++)
-        {
-            if(tiros2.get(i).isVisible()){
-                tiros2.get(i).update();
-            }
-            else{
-                tiros2.remove(i);
-            }
-        }
         for(int i=0 ; i < inimigos1.size() ; i++)
         {
             Inimigo1 in = inimigos1.get(i);
@@ -147,81 +141,53 @@ public class Fase extends JPanel implements ActionListener, MouseListener {
                 inimigos1.remove(i);
             }
         }
-        checarColisoes();
-        repaint();
-    }
 
-    public void checarColisoes(){
-        Rectangle formaNave1 = player1.getBounds();
-        Rectangle formaNave2 = player2.getBounds();
-        Rectangle formaInimigo1;
-        Rectangle formaTiro;
+        for(int i=0 ; i < inimigos2.size() ; i++)
+        {
+            Inimigo2 in = inimigos2.get(i);
 
-        for(int i=0;i<inimigos1.size();i++){
-            Inimigo1 tempInimigo1 = inimigos1.get(i);
-            formaInimigo1 = tempInimigo1.getBounds();
-            if(formaNave1.intersects(formaInimigo1)){
-                player1.setVisible(false);
-                tempInimigo1.setVisible(false);
-                emJogo = false;
+            if(in.isVisible()){
+                in.update();
             }
-            if(formaNave2.intersects(formaInimigo1)){
-                player2.setVisible(false);
-                tempInimigo1.setVisible(false);
-                emJogo = false;
+            else{
+                inimigos2.remove(i);
             }
         }
+
+        for (int q = 0; q < inimigos2.size(); q++) {
+			List<Tiro_Inimigo2> tiroInimigos = inimigos2.get(q).getTiroInimigo();
+			for (int o = 0; o < tiroInimigos.size(); o++) {
+				Tiro_Inimigo2 m = (Tiro_Inimigo2) tiroInimigos.get(o);
+				if (m.isVisible()) {
+					m.update();
+				} else {
+					tiroInimigos.remove(o);
+				}
+
+			}
+		}
         
-        ArrayList<Tiro> tiros = player1.getTiros();
-        for(int j=0;j<tiros.size();j++){
-            Tiro tempTiro=tiros.get(j);
-            formaTiro = tempTiro.getBounds();
-            for(int o =0;o<inimigos1.size();o++){
-                Inimigo1 tempInimigo1 = inimigos1.get(o);
-                formaInimigo1 = tempInimigo1.getBounds();
-                if(formaTiro.intersects(formaInimigo1)){
-                    tempInimigo1.setVisible(false);
-                    tempTiro.setVisible(false); 
-                }
-            }
-        }
-        ArrayList<Tiro> tiros2 = player2.getTiros();
-        for(int j=0;j<tiros2.size();j++){
-            Tiro tempTiro=tiros2.get(j);
-            formaTiro = tempTiro.getBounds();
-            for(int o =0;o<inimigos1.size();o++){
-                Inimigo1 tempInimigo1 = inimigos1.get(o);
-                formaInimigo1 = tempInimigo1.getBounds();
-                if(formaTiro.intersects(formaInimigo1)){
-                    tempInimigo1.setVisible(false);
-                    tempTiro.setVisible(false); 
-                }
-            }
-        }
+        repaint();
     }
 
     private class TecladoAdapter extends KeyAdapter {
         @Override
         public void keyPressed(KeyEvent e) {
             player1.keyPressed(e);
-            player2.keyPressed(e);
         }
-        
     
         @Override
         public void keyReleased(KeyEvent e) {
             player1.keyReleased(e);
-            player2.keyReleased(e);
-
         }
     }
 
-    //  private class MouseAdaptado extends MouseAdapter {
-    //     @Override
-    //     public void mousePressed(MouseEvent e) {
-    //         player1.mousePressed(e);
-    //     }
-    // }
+     private class MouseAdaptado extends MouseAdapter {
+        @Override
+        public void mousePressed(MouseEvent e) {
+            player1.mousePressed(e);
+        }
+    }
 
     @Override
     public void mouseClicked(MouseEvent e) {

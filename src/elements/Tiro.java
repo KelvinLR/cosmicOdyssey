@@ -13,7 +13,7 @@ public class Tiro {
     private boolean isVisible;
 
     private static final int LARGURA = 938;
-    private static int VELOCIDADE = 2;
+    private static int VELOCIDADE = 5;
 
     
     public Tiro(int x, int y){
@@ -36,10 +36,6 @@ public class Tiro {
         this.x += VELOCIDADE;
           if(this.x > LARGURA)
             isVisible = false;
-    }
-
-    public Rectangle getBounds(){
-        return new Rectangle(x,y,largura,altura );
     }
 
     public int getX() {
@@ -70,15 +66,10 @@ public class Tiro {
         return imagem;
     }
 
-    
+    public Rectangle getBounds() {
+		return new Rectangle(x, y, largura, altura);
+	}
 
     
-
-    
-
-
-
-
-
 
 }

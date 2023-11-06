@@ -38,10 +38,6 @@ public class Inimigo1 {
             //isVisible = false;
     }
 
-    public Rectangle getBounds(){
-        return new Rectangle(x,y,largura,altura);
-    }
-    
     public int getX() {
         return x;
     }
@@ -69,6 +65,10 @@ public class Inimigo1 {
     public Image getImagem() {
         return imagem;
     }
+
+    public Rectangle getBounds() {
+		return new Rectangle(x, y, largura, altura);
+	}
 
     
 
