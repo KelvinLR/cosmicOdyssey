@@ -23,7 +23,7 @@ public class Tiro_Inimigo2 {
 	}
 
 	public void load() {
-		ImageIcon referencia = new ImageIcon("res\\Tiros\\TiroInimigo.png");
+		ImageIcon referencia = new ImageIcon("C:\\Users\\world\\Desktop\\Arquivos Acadêmicos\\Programação\\Programas\\Java\\Trabalhos\\Cosmic Odyssey - Jogo 2D (My)\\res\\Tiros\\TiroInimigo.png");
 		Imagem = referencia.getImage();
 
 		this.altura = Imagem.getHeight(null);

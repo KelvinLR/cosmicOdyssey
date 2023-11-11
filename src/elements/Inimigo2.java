@@ -16,7 +16,8 @@ public class Inimigo2 extends Nave implements ActionListener {
     private int x, y;
     private int altura, largura;
     private boolean isVisible, tiro;
-    private List<Tiro_Inimigo2> tiroInimigo;
+    private ArrayList<Tiro_Inimigo2> tiroInimigo;
+	private List<Explosao> explosoes;
     private Timer timer;
 
     private static final int LARGURA = 1024;
@@ -30,10 +31,16 @@ public class Inimigo2 extends Nave implements ActionListener {
         tiro = true;
         
         tiroInimigo = new ArrayList<Tiro_Inimigo2>();
+		explosoes = new ArrayList<Explosao>();
 
         timer = new Timer(1500, this);
 		timer.start();
     }
+
+	public void explosoes() {
+		this.explosoes.add(new Explosao(x + largura, y + altura / 2));
+
+	}
 
     @Override
 	public void actionPerformed(ActionEvent e) {
@@ -47,7 +54,7 @@ public class Inimigo2 extends Nave implements ActionListener {
 
     public void load()
     {
-        ImageIcon referencia = new ImageIcon("res\\Inimigos\\enemy2.png");
+        ImageIcon referencia = new ImageIcon("C:\\Users\\world\\Desktop\\Arquivos Acadêmicos\\Programação\\Programas\\Java\\Trabalhos\\Cosmic Odyssey - Jogo 2D (My)\\res\\Inimigos\\enemy2.png");
         this.imagem = referencia.getImage();
 
         this.altura = imagem.getHeight(null);
@@ -56,9 +63,9 @@ public class Inimigo2 extends Nave implements ActionListener {
 
     public void update()
     {
-        if (this.x < 0) {
+        if (this.x < -largura) {
 			this.x = (int) (Math.random() * 8000 + 1024);
-			this.y = (int) (Math.random() * 694 + 68);
+			this.y = (int) (Math.random() * 580 + 40);
 
 		} else {
 			this.x -= VELOCIDADE;
@@ -70,7 +77,7 @@ public class Inimigo2 extends Nave implements ActionListener {
 
 	}
 
-    public List<Tiro_Inimigo2> getTiroInimigo() {
+    public ArrayList<Tiro_Inimigo2> getTiroInimigo() {
 		return tiroInimigo;
 	}
 
@@ -106,19 +113,8 @@ public class Inimigo2 extends Nave implements ActionListener {
 		this.imagem = imagem;
 	}
 
-	//public List<Explosao> getExplosoes() {
-		//return explosoes;
-	//}
-
-    
-
-    
-
-    
-
-
-
-
-
+	public List<Explosao> getExplosoes() {
+		return explosoes;
+	}
 
 }

@@ -2,15 +2,22 @@ package elements;
 
 import java.awt.Image;
 import java.awt.Rectangle;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.ImageIcon;
+import javax.swing.Timer;
 
 
-public class Inimigo1 {
+public class Inimigo1 extends Nave implements ActionListener {
     private Image imagem;
     private int x, y;
     private int altura, largura;
     private boolean isVisible;
+    private List<Explosao> explosoes;
+    private Timer timer;
 
     //private static final int LARGURA = 938;
     private static int VELOCIDADE = 2;
@@ -20,11 +27,26 @@ public class Inimigo1 {
         this.x = x;
         this.y = y;
         isVisible = true;
+
+        explosoes = new ArrayList<Explosao>();
+
+        timer = new Timer(1000, this);
+		timer.start();
     }
+
+    @Override
+	public void actionPerformed(ActionEvent e) {
+
+	}
+
+    public void explosoes() {
+		this.explosoes.add(new Explosao(x + largura, y + altura / 2));
+
+	}
 
     public void load()
     {
-        ImageIcon referencia = new ImageIcon("res\\Inimigos\\enemy1.png");
+        ImageIcon referencia = new ImageIcon("C:\\Users\\world\\Desktop\\Arquivos Acadêmicos\\Programação\\Programas\\Java\\Trabalhos\\Cosmic Odyssey - Jogo 2D (My)\\res\\Inimigos\\enemy1.png");
         this.imagem = referencia.getImage();
 
         this.altura = imagem.getHeight(null);
@@ -33,9 +55,15 @@ public class Inimigo1 {
 
     public void update()
     {
-        this.x -= VELOCIDADE;
-          //if(this.x > LARGURA)
-            //isVisible = false;
+        if (this.x < -largura) {
+
+			this.x = (int) (Math.random() * 8000 + 1024);
+			this.y = (int) (Math.random() * 580 + 40);
+
+		}
+        else {
+            this.x -= VELOCIDADE;
+        }
     }
 
     public int getX() {
@@ -70,15 +98,7 @@ public class Inimigo1 {
 		return new Rectangle(x, y, largura, altura);
 	}
 
-    
-
-    
-
-    
-
-
-
-
-
-
+    public List<Explosao> getExplosoes() {
+        return explosoes;
+    }
 }

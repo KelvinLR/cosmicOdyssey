@@ -13,29 +13,72 @@ public class Player {
     private Image imagem;
     private int altura, largura;
     private ArrayList <Tiro> tiros;
-    private static int VELOCIDADE = 4;
+    private static int VELOCIDADE = 5;
+    private boolean isVisible;
+    private int vida;
+    private int score;
 
     public Player()
     {
         this.x = 100;
         this.y = 100;
+        isVisible = true;
+
+        this.vida = 5;
+        score = 0;
 
         tiros = new ArrayList<Tiro>();
     }
 
     public void load()
     {
-        ImageIcon referencia = new ImageIcon("res\\Player Nave\\spaceship2.png");
+        ImageIcon referencia = new ImageIcon("C:\\Users\\world\\Desktop\\Arquivos Acadêmicos\\Programação\\Programas\\Java\\Trabalhos\\Cosmic Odyssey - Jogo 2D (My)\\res\\Player Nave\\spaceship2.png");
         this.imagem = referencia.getImage();
 
         this.altura = imagem.getHeight(null);
         this.largura = imagem.getWidth(null);
     }
 
+    public void setImagemvida() {
+		
+        
+        if (vida == 1) {
+			ImageIcon referencia = new ImageIcon("C:\\Users\\world\\Desktop\\Arquivos Acadêmicos\\Programação\\Programas\\Java\\Trabalhos\\Cosmic Odyssey - Jogo 2D (My)\\res\\Player Nave\\spaceship2Hitmed.png");
+			imagem = referencia.getImage();
+
+		}
+		else if (vida == 0) {
+			ImageIcon referencia = new ImageIcon("C:\\Users\\world\\Desktop\\Arquivos Acadêmicos\\Programação\\Programas\\Java\\Trabalhos\\Cosmic Odyssey - Jogo 2D (My)\\res\\Player Nave\\spaceship2Hit.png");
+			imagem = referencia.getImage();
+		}
+        else{
+            ImageIcon referencia = new ImageIcon("C:\\Users\\world\\Desktop\\Arquivos Acadêmicos\\Programação\\Programas\\Java\\Trabalhos\\Cosmic Odyssey - Jogo 2D (My)\\res\\Player Nave\\spaceship2.png");
+            this.imagem = referencia.getImage();
+        }
+
+	}
+
     public void update()
     {
         x += dx;
         y += dy;
+
+        if (this.x < 6) {
+			x = 6;
+		}
+
+		if (this.x > 938) {
+			x = 938;
+		}
+
+		if (this.y < 60) {
+			y = 60;
+		}
+		if (this.y > 600) {
+			y = 600;
+		}
+
+        setImagemvida();
     }
 
     public void tiroSimples()
@@ -119,6 +162,37 @@ public class Player {
     public Rectangle getBounds() {
 		return new Rectangle(x, y, largura, altura);
 	}
+
+    public boolean isVisible() {
+        return isVisible;
+    }
+
+    public void setVisible(boolean isVisible) {
+        this.isVisible = isVisible;
+    }
+
+    public int getVida() {
+        return vida;
+    }
+
+    public void setVida(int vida) {
+        this.vida = vida;
+    }
+
+    public int getScore() {
+        return score;
+    }
+
+    public void setScore(int score) {
+        this.score = score;
+    }
+
+    public void somarScore()
+    {
+        this.score++;
+    }
+
+    
 
     
 

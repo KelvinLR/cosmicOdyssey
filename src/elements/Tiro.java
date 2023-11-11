@@ -2,8 +2,8 @@ package elements;
 
 import java.awt.Image;
 import java.awt.Rectangle;
-
 import javax.swing.ImageIcon;
+import songs.EfeitosSonoros;
 
 
 public class Tiro {
@@ -13,18 +13,19 @@ public class Tiro {
     private boolean isVisible;
 
     private static final int LARGURA = 938;
-    private static int VELOCIDADE = 5;
+    private static int VELOCIDADE = 6;
 
     
     public Tiro(int x, int y){
         this.x = x;
         this.y = y;
         isVisible = true;
+        somTiroSimples();
     }
 
     public void load()
     {
-        ImageIcon referencia = new ImageIcon("res\\Tiros\\TiroSimples.png");
+        ImageIcon referencia = new ImageIcon("C:\\Users\\world\\Desktop\\Arquivos Acadêmicos\\Programação\\Programas\\Java\\Trabalhos\\Cosmic Odyssey - Jogo 2D (My)\\res\\Tiros\\TiroSimples.png");
         this.imagem = referencia.getImage();
 
         this.altura = imagem.getHeight(null);
@@ -37,6 +38,11 @@ public class Tiro {
           if(this.x > LARGURA)
             isVisible = false;
     }
+
+    public void somTiroSimples() {
+		EfeitosSonoros a = new EfeitosSonoros();
+		a.tocarTiro();
+	}
 
     public int getX() {
         return x;
