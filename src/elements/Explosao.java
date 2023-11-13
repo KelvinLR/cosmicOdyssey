@@ -25,7 +25,8 @@ public class Explosao {
 	}
 
 	public void load() {
-		ImageIcon referencia = new ImageIcon("C:\\Users\\world\\Desktop\\Arquivos Acadêmicos\\Programação\\Programas\\Java\\Trabalhos\\Cosmic Odyssey - Jogo 2D (My)\\res\\Efeitos\\explosion1.gif");
+		ImageIcon referencia = new ImageIcon(getClass().getClassLoader().getResource("res/explosion1.gif"));
+
 		Imagem = referencia.getImage();
 
 		this.altura = Imagem.getHeight(null);

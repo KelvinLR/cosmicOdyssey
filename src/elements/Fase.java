@@ -1,7 +1,7 @@
 package elements;
 import java.awt.Color;
 import java.awt.Font;
-//import java.awt.Color;
+import java.awt.FontFormatException;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
@@ -13,9 +13,12 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseListener;
+import java.io.File;
+import java.io.IOException;
 import javax.swing.ImageIcon;
 import javax.swing.JPanel;
 import javax.swing.Timer;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -37,7 +40,7 @@ public class Fase extends JPanel implements ActionListener, MouseListener {
         setDoubleBuffered(true);
         emJogo = true;
 
-        ImageIcon referencia = new ImageIcon("C:\\Users\\world\\Desktop\\Arquivos Acadêmicos\\Programação\\Programas\\Java\\Trabalhos\\Cosmic Odyssey - Jogo 2D (My)\\res\\Paineis\\pixel art _ Tumblr.gif");
+        ImageIcon referencia = new ImageIcon(getClass().getClassLoader().getResource("res/pixel art _ Tumblr.gif"));
 
         fundo = referencia.getImage();
 
@@ -61,6 +64,24 @@ public class Fase extends JPanel implements ActionListener, MouseListener {
     public void inicializaExplosoes() {
 		explosoes = new ArrayList<Explosao>();
 	}
+
+    public Font carregarFonte() {
+        try {
+            InputStream fontStream = getClass().getResourceAsStream("/res/Fonts/Minecraft.ttf");
+
+            if (fontStream != null) {
+                return Font.createFont(Font.TRUETYPE_FONT, fontStream).deriveFont(1, 18);
+            } else {
+                System.err.println("Arquivo de fonte não encontrado.");
+            }
+        } catch (IOException | FontFormatException e) {
+            e.printStackTrace();
+        }
+
+        // Lida com exceções, por exemplo, carregando uma fonte padrão
+        return new Font("Arial", Font.PLAIN, 18);
+    }
+
 
     public void inicializaInimigos()
     {
@@ -150,7 +171,7 @@ public class Fase extends JPanel implements ActionListener, MouseListener {
         //Status da vida
         int a = 10;
 			for (int j = 0; j < player1.getVida(); j++) {
-				ImageIcon vida = new ImageIcon("C:\\Users\\world\\Desktop\\Arquivos Acadêmicos\\Programação\\Programas\\Java\\Trabalhos\\Cosmic Odyssey - Jogo 2D (My)\\res\\Paineis\\Vida.png");
+				ImageIcon vida = new ImageIcon(getClass().getClassLoader().getResource("res/Vida.png"));
 				graficos.drawImage(vida.getImage(), a, 10, null);
 				a += 30;
 			}
@@ -159,6 +180,9 @@ public class Fase extends JPanel implements ActionListener, MouseListener {
         //Score
         graficos.setColor(Color.white);
 		g.setFont(new Font("Minecraft", 1, 18));
+
+        Font minecraftFont = carregarFonte();
+        graficos.setFont(minecraftFont);
 		
         String scoreText = "SCORE: " + player1.getScore();
         int textWidth = graficos.getFontMetrics().stringWidth(scoreText);
@@ -176,7 +200,7 @@ public class Fase extends JPanel implements ActionListener, MouseListener {
 
         else
         {
-            ImageIcon gameOver = new ImageIcon("C:\\Users\\world\\Desktop\\Arquivos Acadêmicos\\Programação\\Programas\\Java\\Trabalhos\\Cosmic Odyssey - Jogo 2D (My)\\res\\Paineis\\fimdejogo.png");
+            ImageIcon gameOver = new ImageIcon(getClass().getClassLoader().getResource("res/fimdejogo.png"));
             graficos.drawImage(gameOver.getImage(), 0, 0, null);
         }
 

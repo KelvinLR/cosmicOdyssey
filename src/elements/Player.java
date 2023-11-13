@@ -32,7 +32,7 @@ public class Player {
 
     public void load()
     {
-        ImageIcon referencia = new ImageIcon("C:\\Users\\world\\Desktop\\Arquivos Acadêmicos\\Programação\\Programas\\Java\\Trabalhos\\Cosmic Odyssey - Jogo 2D (My)\\res\\Player Nave\\spaceship2.png");
+        ImageIcon referencia = new ImageIcon(getClass().getClassLoader().getResource("res/spaceship2.png"));
         this.imagem = referencia.getImage();
 
         this.altura = imagem.getHeight(null);
@@ -43,16 +43,16 @@ public class Player {
 		
         
         if (vida == 1) {
-			ImageIcon referencia = new ImageIcon("C:\\Users\\world\\Desktop\\Arquivos Acadêmicos\\Programação\\Programas\\Java\\Trabalhos\\Cosmic Odyssey - Jogo 2D (My)\\res\\Player Nave\\spaceship2Hitmed.png");
+			ImageIcon referencia = new ImageIcon(getClass().getClassLoader().getResource("res/spaceship2Hitmed.png"));
 			imagem = referencia.getImage();
 
 		}
 		else if (vida == 0) {
-			ImageIcon referencia = new ImageIcon("C:\\Users\\world\\Desktop\\Arquivos Acadêmicos\\Programação\\Programas\\Java\\Trabalhos\\Cosmic Odyssey - Jogo 2D (My)\\res\\Player Nave\\spaceship2Hit.png");
+			ImageIcon referencia = new ImageIcon(getClass().getClassLoader().getResource("res/spaceship2Hit.png"));
 			imagem = referencia.getImage();
 		}
         else{
-            ImageIcon referencia = new ImageIcon("C:\\Users\\world\\Desktop\\Arquivos Acadêmicos\\Programação\\Programas\\Java\\Trabalhos\\Cosmic Odyssey - Jogo 2D (My)\\res\\Player Nave\\spaceship2.png");
+            ImageIcon referencia = new ImageIcon(getClass().getClassLoader().getResource("res/spaceship2.png"));
             this.imagem = referencia.getImage();
         }
 

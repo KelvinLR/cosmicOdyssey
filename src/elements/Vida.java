@@ -31,7 +31,7 @@ public class Vida {
 	}
 
 	public void load_Vida() {
-		ImageIcon referencia = new ImageIcon("C:\\Users\\world\\Desktop\\Arquivos Acadêmicos\\Programação\\Programas\\Java\\Trabalhos\\Cosmic Odyssey - Jogo 2D (My)\\res\\Paineis\\Vida.png");
+		ImageIcon referencia = new ImageIcon(getClass().getClassLoader().getResource("res/Vida.png"));
 		vida = referencia.getImage();
 		this.altura = vida.getHeight(null);
 		this.largura = vida.getWidth(null);
