@@ -23,16 +23,19 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Fase extends JPanel implements ActionListener, MouseListener {
-    
+
     private Image fundo;
     private Player player1;
     private Timer timer;
     private ArrayList <Inimigo1> inimigos1;
     private ArrayList <Inimigo2> inimigos2;
     private List<Vida> vidas;
-    private List<Explosao> explosoes;
+    private ArrayList <Explosao> explosoes;
     private boolean emJogo, emExplosao;
     private int powerUpVida = 0;
+    private Font minecraftFont;
+
+    private static int numeroInimigos = 20;
 
     public Fase()
     {
@@ -41,11 +44,11 @@ public class Fase extends JPanel implements ActionListener, MouseListener {
         emJogo = true;
 
         ImageIcon referencia = new ImageIcon(getClass().getClassLoader().getResource("res/pixel art _ Tumblr.gif"));
-
         fundo = referencia.getImage();
+        //ImageIcon gamerOver = new ImageIcon(getClass().getClassLoader().getResource("res/fimdejogo.png"));
+        //this.gameOver = referencia.getImage();
 
         player1 = new Player();
-        player1.load();
 
         powerUpVida = 0;
         vidas = new ArrayList<Vida>();
@@ -58,12 +61,9 @@ public class Fase extends JPanel implements ActionListener, MouseListener {
         timer.start();
 
         inicializaInimigos();
-        inicializaExplosoes();
+        this.explosoes = new ArrayList<>();
+        minecraftFont = carregarFonte();
     }
-
-    public void inicializaExplosoes() {
-		explosoes = new ArrayList<Explosao>();
-	}
 
     public Font carregarFonte() {
         try {
@@ -85,17 +85,15 @@ public class Fase extends JPanel implements ActionListener, MouseListener {
 
     public void inicializaInimigos()
     {
-        int cordenadas[] = new int[40];
-
         inimigos1 = new ArrayList<Inimigo1>();
-        for (int i = 0; i < cordenadas.length; i++) {
+        for (int i = 0; i < numeroInimigos; i++) {
 			int x = (int) ((Math.random() * 8000) + 1024);
 			int y = (int) ((Math.random() * 580) + 40);
             inimigos1.add(new Inimigo1(x, y));
 		}
 
         inimigos2 = new ArrayList<Inimigo2>();
-        for (int i = 0; i < cordenadas.length; i++) {
+        for (int i = 0; i < numeroInimigos; i++) {
 			int x = (int) ((Math.random() * 12000) + 1024);
 			int y = (int) ((Math.random() * 580) + 40);
             inimigos2.add(new Inimigo2(x, y));
@@ -103,105 +101,93 @@ public class Fase extends JPanel implements ActionListener, MouseListener {
 
     }
 
-    public void paint(Graphics g)
-    {
+    public void paint(Graphics g) {
         Graphics2D graficos = (Graphics2D) g;
 
-        if(emJogo)
-        {
-        graficos.drawImage(fundo, 0, 0, null);
-        graficos.drawImage(player1.getImagem(),player1.getX(),player1.getY(),this);
+        if (emJogo) {
+            graficos.drawImage(fundo, 0, 0, null);
+            graficos.drawImage(player1.getImagem(), player1.getX(), player1.getY(), this);
 
-        ArrayList<Tiro> tiros = player1.getTiros();
+            ArrayList<Tiro> tiros = player1.getTiros();
 
-        //Tiros do Player
-        for(int i=0 ; i < tiros.size() ; i++)
-        {
-            Tiro t = tiros.get(i);
-            t.load();
-            graficos.drawImage(t.getImagem(),t.getX(),t.getY(),this);
-        }
-        //////////////////////////////////////////////////////////////////////////////
+            //Tiros do Player
+            for (int i = 0; i < tiros.size(); i++) {
+                Tiro t = tiros.get(i);
+                    graficos.drawImage(t.getImagem(), t.getX(), t.getY(), this);
+            }
+            //////////////////////////////////////////////////////////////////////////////
 
-        //Inimigos 1
-        for(int i=0 ; i < inimigos1.size() ; i++)
-        {
-            Inimigo1 in = inimigos1.get(i);
-            in.load();
-            graficos.drawImage(in.getImagem(),in.getX(),in.getY(),this);
-        }
-        //////////////////////////////////////////////////////////////////////////////
+            //Inimigos 1
+            for (int i = 0; i < inimigos1.size(); i++) {
+                Inimigo1 in = inimigos1.get(i);
+                if (in.getBounds().intersects(0, 0, 1024, 728)) {
+                    graficos.drawImage(in.getImagem(), in.getX(), in.getY(), this);
+                }
+            }
+            //////////////////////////////////////////////////////////////////////////////
 
-        //Inimigos 2 e seus Tiros
-        for(int i=0 ; i < inimigos2.size() ; i++)
-        {
-            Inimigo2 in = inimigos2.get(i);
-            in.load();
-            graficos.drawImage(in.getImagem(),in.getX(),in.getY(),this);
-        }
+            //Inimigos 2 e seus Tiros
+            for (int i = 0; i < inimigos2.size(); i++) {
+                Inimigo2 in = inimigos2.get(i);
+                if (in.getBounds().intersects(0, 0, 1024, 728)) {
+                    graficos.drawImage(in.getImagem(), in.getX(), in.getY(), this);
+                }
+            }
 
-			for (int i = 0; i < inimigos2.size(); i++) {
-				List<Tiro_Inimigo2> tirosInimigo = inimigos2.get(i).getTiroInimigo();
-				for (int o = 0; o < tirosInimigo.size(); o++) {
-					Tiro_Inimigo2 m = (Tiro_Inimigo2) tirosInimigo.get(o);
-					m.load();
-					graficos.drawImage(m.getImagem(), m.getX(), m.getY(), this);
-				}
-			}
-        //////////////////////////////////////////////////////////////////////////////
+            for (int i = 0; i < inimigos2.size(); i++) {
+                List<Tiro_Inimigo2> tirosInimigo = inimigos2.get(i).getTiroInimigo();
+                for (int o = 0; o < tirosInimigo.size(); o++) {
+                    Tiro_Inimigo2 m = (Tiro_Inimigo2) tirosInimigo.get(o);
+                    if (m.getBounds().intersects(0, 0, 1024, 728)) {
+                        graficos.drawImage(m.getImagem(), m.getX(), m.getY(), this);
+                    }
+                }
+            }
+            //////////////////////////////////////////////////////////////////////////////
 
-        //Explosões
-        for(int i=0 ; i<explosoes.size() ; i++)
-        {
-            Explosao ex = explosoes.get(i);
-            ex.load();
-            graficos.drawImage(ex.getImagem(), ex.getX(), ex.getY(), this);
-        }
-        /////////////////////////////////////////////////////////////////////////////
+            //Explosões
+            for (int i = 0; i < explosoes.size(); i++) {
+                Explosao ex = explosoes.get(i);
+                graficos.drawImage(ex.getImagem(), ex.getX(), ex.getY(), this);
+            }
+            /////////////////////////////////////////////////////////////////////////////
 
-        //PowerUp Vida
-        for (int k = 0; k < vidas.size(); k++) {
-            Vida on = vidas.get(k);
-            on.load_Vida();
-        
-            graficos.drawImage(on.getVida(), on.getX(), on.getY(), null);
-        }
-        /////////////////////////////////////////////////////////////////////////////////
+            //PowerUp Vida
+            for (int k = 0; k < vidas.size(); k++) {
+                Vida on = vidas.get(k);
 
-        //Status da vida
-        int a = 10;
-			for (int j = 0; j < player1.getVida(); j++) {
-				ImageIcon vida = new ImageIcon(getClass().getClassLoader().getResource("res/Vida.png"));
-				graficos.drawImage(vida.getImage(), a, 10, null);
-				a += 30;
-			}
+                graficos.drawImage(on.getVida(), on.getX(), on.getY(), null);
+            }
+            /////////////////////////////////////////////////////////////////////////////////
+
+            //Status da vida
+            int a = 10;
+            for (int j = 0; j < player1.getVida(); j++) {
+                ImageIcon vida = new ImageIcon(getClass().getClassLoader().getResource("res/Vida.png"));
+                graficos.drawImage(vida.getImage(), a, 10, null);
+                a += 30;
+            }
             /////////////////////////////////////////////////////////////////////////////////////
 
-        //Score
-        graficos.setColor(Color.white);
-		g.setFont(new Font("Minecraft", 1, 18));
+            //Score
+            graficos.setColor(Color.white);
+            graficos.setFont(minecraftFont);
 
-        Font minecraftFont = carregarFonte();
-        graficos.setFont(minecraftFont);
-		
-        String scoreText = "SCORE: " + player1.getScore();
-        int textWidth = graficos.getFontMetrics().stringWidth(scoreText);
+            String scoreText = "SCORE: " + player1.getScore();
+            int textWidth = graficos.getFontMetrics().stringWidth(scoreText);
 
-        int screenWidth = getWidth();
-        int screenHeight = getHeight();
+            int screenWidth = getWidth();
+            int screenHeight = getHeight();
 
-        int x = (screenWidth - textWidth) / 2; // Centraliza horizontalmente
-        int y = 30; // Define a posição vertical (ajuste conforme necessário)
+            int x = (screenWidth - textWidth) / 2; // Centraliza horizontalmente
+            int y = 30; // Define a posição vertical (ajuste conforme necessário)
 
-        graficos.drawString(scoreText, x, y);
-
+            graficos.drawString(scoreText, x, y);
         }
-        ///////////////////////////////////////////////////////////////////////////////////////////
-
         else
         {
-            ImageIcon gameOver = new ImageIcon(getClass().getClassLoader().getResource("res/fimdejogo.png"));
-            graficos.drawImage(gameOver.getImage(), 0, 0, null);
+            ImageIcon gamerOver = new ImageIcon(getClass().getClassLoader().getResource("res/fimdejogo.png"));
+            graficos.drawImage(gamerOver.getImage(), 0, 0, null);
         }
 
         g.dispose();
@@ -220,6 +206,7 @@ public class Fase extends JPanel implements ActionListener, MouseListener {
             }
             else{
                 tiros.remove(i);
+                i--;
             }
         }
 
@@ -232,6 +219,7 @@ public class Fase extends JPanel implements ActionListener, MouseListener {
             }
             else{
                 inimigos1.remove(i);
+                i--;
                 explosoes.add(new Explosao(in.getX(), in.getY()));
 
                 powerUpVida++;
@@ -242,50 +230,57 @@ public class Fase extends JPanel implements ActionListener, MouseListener {
             }
         }
 
-        for(int i=0 ; i < inimigos2.size() ; i++)
-        {
-            Inimigo2 in = inimigos2.get(i);
+        if(inimigos2 != null && !inimigos2.isEmpty()) {
+            for (int i = 0; i < inimigos2.size(); i++) {
+                Inimigo2 in = inimigos2.get(i);
 
-            if(in.isVisible()){
-                in.update();
-            }
-            else{
-                inimigos2.remove(i);
-                explosoes.add(new Explosao(in.getX(), in.getY()));
+                if (in.isVisible()) {
+                    in.update();
+                } else {
+                    inimigos2.remove(i);
+                    i--;
+                    explosoes.add(new Explosao(in.getX(), in.getY()));
+                }
             }
         }
 
-        for (int q = 0; q < inimigos2.size(); q++) {
-			List<Tiro_Inimigo2> tiroInimigos = inimigos2.get(q).getTiroInimigo();
-			for (int o = 0; o < tiroInimigos.size(); o++) {
-				Tiro_Inimigo2 m = (Tiro_Inimigo2) tiroInimigos.get(o);
-				if (m.isVisible()) {
-					m.update();
-				} else {
-					tiroInimigos.remove(o);
-				}
+        if(inimigos2 != null && !inimigos2.isEmpty()) {
+            for (int q = 0; q < inimigos2.size(); q++) {
+                List<Tiro_Inimigo2> tiroInimigos = inimigos2.get(q).getTiroInimigo();
+                for (int o = 0; o < tiroInimigos.size(); o++) {
+                    Tiro_Inimigo2 m = (Tiro_Inimigo2) tiroInimigos.get(o);
+                    if (m.isVisible()) {
+                        m.update();
+                    } else {
+                        tiroInimigos.remove(o);
+                        o--;
+                    }
 
-			}
-		}
+                }
+            }
+        }
 
-		for (int q = 0; q < explosoes.size(); q++) {
-			Explosao y = explosoes.get(q);
-			if (y.isVisivel()) {
-				y.update();
-			} else {
-				explosoes.remove(q);
-			}
-
-		}
+        if(explosoes != null && !explosoes.isEmpty()) {
+            for (int q = 0; q < explosoes.size(); q++) {
+                Explosao y = explosoes.get(q);
+                if (y.isVisivel()) {
+                    y.update();
+                } else {
+                    explosoes.remove(q);
+                    q--;
+                }
+            }
+        }
 
         for (int p = 0; p < vidas.size(); p++) {
 			Vida on = vidas.get(p);
 
                 if(on.isVisivel())
                     on.update();
-                else
+                else {
                     vidas.remove(p);
-                
+                    p--;
+                }
 		}
 
         checarColisoes();

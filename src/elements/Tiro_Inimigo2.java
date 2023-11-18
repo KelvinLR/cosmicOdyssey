@@ -20,15 +20,10 @@ public class Tiro_Inimigo2 {
 		this.y = y;
 		isVisivel = true;
 
-	}
-
-	public void load() {
 		ImageIcon referencia = new ImageIcon(getClass().getClassLoader().getResource("res/TiroInimigo.png"));
 		Imagem = referencia.getImage();
-
 		this.altura = Imagem.getHeight(null);
 		this.largura = Imagem.getWidth(null);
-
 	}
 
 	public void update() {
@@ -40,7 +35,6 @@ public class Tiro_Inimigo2 {
 		if (this.x < 0) {
 			isVisivel = false;
 		}
-
 	}
 
 	public boolean isVisible() {

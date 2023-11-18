@@ -21,13 +21,9 @@ public class Tiro {
         this.y = y;
         isVisible = true;
         somTiroSimples();
-    }
 
-    public void load()
-    {
         ImageIcon referencia = new ImageIcon(getClass().getClassLoader().getResource("res/TiroSimples.png"));
         this.imagem = referencia.getImage();
-
         this.altura = imagem.getHeight(null);
         this.largura = imagem.getWidth(null);
     }

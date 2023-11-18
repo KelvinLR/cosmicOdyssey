@@ -17,7 +17,6 @@ public class Inimigo2 extends Nave implements ActionListener {
     private int altura, largura;
     private boolean isVisible, tiro;
     private ArrayList<Tiro_Inimigo2> tiroInimigo;
-	private List<Explosao> explosoes;
     private Timer timer;
 
     private static final int LARGURA = 1024;
@@ -31,16 +30,15 @@ public class Inimigo2 extends Nave implements ActionListener {
         tiro = true;
         
         tiroInimigo = new ArrayList<Tiro_Inimigo2>();
-		explosoes = new ArrayList<Explosao>();
 
         timer = new Timer(1500, this);
 		timer.start();
+
+		ImageIcon referencia = new ImageIcon(getClass().getClassLoader().getResource("res/enemy2.png"));
+        this.imagem = referencia.getImage();
+        this.altura = imagem.getHeight(null);
+        this.largura = imagem.getWidth(null);
     }
-
-	public void explosoes() {
-		this.explosoes.add(new Explosao(x + largura, y + altura / 2));
-
-	}
 
     @Override
 	public void actionPerformed(ActionEvent e) {
@@ -52,21 +50,11 @@ public class Inimigo2 extends Nave implements ActionListener {
 
 	}
 
-    public void load()
-    {
-        ImageIcon referencia = new ImageIcon(getClass().getClassLoader().getResource("res/enemy2.png"));
-        this.imagem = referencia.getImage();
-
-        this.altura = imagem.getHeight(null);
-        this.largura = imagem.getWidth(null);
-    }
-
     public void update()
     {
         if (this.x < -largura) {
 			this.x = (int) (Math.random() * 8000 + 1024);
 			this.y = (int) (Math.random() * 580 + 40);
-
 		} else {
 			this.x -= VELOCIDADE;
 		}
@@ -111,10 +99,6 @@ public class Inimigo2 extends Nave implements ActionListener {
 
 	public void setImagem(Image imagem) {
 		this.imagem = imagem;
-	}
-
-	public List<Explosao> getExplosoes() {
-		return explosoes;
 	}
 
 }

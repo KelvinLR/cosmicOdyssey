@@ -16,7 +16,6 @@ public class Inimigo1 extends Nave implements ActionListener {
     private int x, y;
     private int altura, largura;
     private boolean isVisible;
-    private List<Explosao> explosoes;
     private Timer timer;
 
     //private static final int LARGURA = 938;
@@ -28,10 +27,13 @@ public class Inimigo1 extends Nave implements ActionListener {
         this.y = y;
         isVisible = true;
 
-        explosoes = new ArrayList<Explosao>();
-
         timer = new Timer(1000, this);
 		timer.start();
+
+        ImageIcon referencia = new ImageIcon(getClass().getClassLoader().getResource("res/enemy1.png"));
+        this.imagem = referencia.getImage();
+        this.altura = imagem.getHeight(null);
+        this.largura = imagem.getWidth(null);
     }
 
     @Override
@@ -39,31 +41,17 @@ public class Inimigo1 extends Nave implements ActionListener {
 
 	}
 
-    public void explosoes() {
-		this.explosoes.add(new Explosao(x + largura, y + altura / 2));
-
-	}
-
-    public void load()
-    {
-        ImageIcon referencia = new ImageIcon(getClass().getClassLoader().getResource("res/enemy1.png"));
-        this.imagem = referencia.getImage();
-
-        this.altura = imagem.getHeight(null);
-        this.largura = imagem.getWidth(null);
-    }
-
     public void update()
     {
         if (this.x < -largura) {
 
 			this.x = (int) (Math.random() * 8000 + 1024);
 			this.y = (int) (Math.random() * 580 + 40);
-
 		}
         else {
             this.x -= VELOCIDADE;
         }
+
     }
 
     public int getX() {
@@ -97,8 +85,4 @@ public class Inimigo1 extends Nave implements ActionListener {
     public Rectangle getBounds() {
 		return new Rectangle(x, y, largura, altura);
 	}
-
-    public List<Explosao> getExplosoes() {
-        return explosoes;
-    }
 }

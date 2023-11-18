@@ -20,6 +20,11 @@ public class Vida {
 		this.x = x;
 		this.y = y;
 		isVisivel = true;
+
+		ImageIcon referencia = new ImageIcon(getClass().getClassLoader().getResource("res/Vida.png"));
+		vida = referencia.getImage();
+		this.altura = vida.getHeight(null);
+		this.largura = vida.getWidth(null);
 	}
 
 	public void update() {
@@ -30,14 +35,6 @@ public class Vida {
 		}
 	}
 
-	public void load_Vida() {
-		ImageIcon referencia = new ImageIcon(getClass().getClassLoader().getResource("res/Vida.png"));
-		vida = referencia.getImage();
-		this.altura = vida.getHeight(null);
-		this.largura = vida.getWidth(null);
-	}
-
-	
 	public Image getVida() {
 		return vida;
 	}

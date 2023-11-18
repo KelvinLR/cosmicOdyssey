@@ -28,13 +28,9 @@ public class Player {
         score = 0;
 
         tiros = new ArrayList<Tiro>();
-    }
 
-    public void load()
-    {
         ImageIcon referencia = new ImageIcon(getClass().getClassLoader().getResource("res/spaceship2.png"));
         this.imagem = referencia.getImage();
-
         this.altura = imagem.getHeight(null);
         this.largura = imagem.getWidth(null);
     }

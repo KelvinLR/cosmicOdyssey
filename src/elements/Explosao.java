@@ -22,13 +22,9 @@ public class Explosao {
 		this.y = y;
 		isVisivel = true;
 		SomExplosao();
-	}
 
-	public void load() {
 		ImageIcon referencia = new ImageIcon(getClass().getClassLoader().getResource("res/explosion1.gif"));
-
 		Imagem = referencia.getImage();
-
 		this.altura = Imagem.getHeight(null);
 		this.largura = Imagem.getWidth(null);
 	}
