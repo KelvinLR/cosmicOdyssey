@@ -27,8 +27,8 @@ public class Fase extends JPanel implements ActionListener, MouseListener {
     private Image fundo;
     private Player player1;
     private Timer timer;
-    private ArrayList <Inimigo1> inimigos1;
-    private ArrayList <Inimigo2> inimigos2;
+    private ArrayList<InimigoComum> inimigosComuns;
+    private ArrayList<InimigoAtirador> inimigosAtiradores;
     private List<Vida> vidas;
     private ArrayList <Explosao> explosoes;
     private boolean emJogo, emExplosao;
@@ -85,18 +85,18 @@ public class Fase extends JPanel implements ActionListener, MouseListener {
 
     public void inicializaInimigos()
     {
-        inimigos1 = new ArrayList<Inimigo1>();
+        inimigosComuns = new ArrayList<InimigoComum>();
         for (int i = 0; i < numeroInimigos; i++) {
 			int x = (int) ((Math.random() * 8000) + 1024);
 			int y = (int) ((Math.random() * 580) + 40);
-            inimigos1.add(new Inimigo1(x, y));
+            inimigosComuns.add(new InimigoComum(x, y));
 		}
 
-        inimigos2 = new ArrayList<Inimigo2>();
+        inimigosAtiradores = new ArrayList<InimigoAtirador>();
         for (int i = 0; i < numeroInimigos; i++) {
 			int x = (int) ((Math.random() * 12000) + 1024);
 			int y = (int) ((Math.random() * 580) + 40);
-            inimigos2.add(new Inimigo2(x, y));
+            inimigosAtiradores.add(new InimigoAtirador(x, y));
 		}
 
     }
@@ -118,8 +118,8 @@ public class Fase extends JPanel implements ActionListener, MouseListener {
             //////////////////////////////////////////////////////////////////////////////
 
             //Inimigos 1
-            for (int i = 0; i < inimigos1.size(); i++) {
-                Inimigo1 in = inimigos1.get(i);
+            for (int i = 0; i < inimigosComuns.size(); i++) {
+                InimigoComum in = inimigosComuns.get(i);
                 if (in.getBounds().intersects(0, 0, 1024, 728)) {
                     graficos.drawImage(in.getImagem(), in.getX(), in.getY(), this);
                 }
@@ -127,17 +127,17 @@ public class Fase extends JPanel implements ActionListener, MouseListener {
             //////////////////////////////////////////////////////////////////////////////
 
             //Inimigos 2 e seus Tiros
-            for (int i = 0; i < inimigos2.size(); i++) {
-                Inimigo2 in = inimigos2.get(i);
+            for (int i = 0; i < inimigosAtiradores.size(); i++) {
+                InimigoAtirador in = inimigosAtiradores.get(i);
                 if (in.getBounds().intersects(0, 0, 1024, 728)) {
                     graficos.drawImage(in.getImagem(), in.getX(), in.getY(), this);
                 }
             }
 
-            for (int i = 0; i < inimigos2.size(); i++) {
-                List<Tiro_Inimigo2> tirosInimigo = inimigos2.get(i).getTiroInimigo();
+            for (int i = 0; i < inimigosAtiradores.size(); i++) {
+                List<TiroInimigo> tirosInimigo = inimigosAtiradores.get(i).getTiroInimigo();
                 for (int o = 0; o < tirosInimigo.size(); o++) {
-                    Tiro_Inimigo2 m = (Tiro_Inimigo2) tirosInimigo.get(o);
+                    TiroInimigo m = (TiroInimigo) tirosInimigo.get(o);
                     if (m.getBounds().intersects(0, 0, 1024, 728)) {
                         graficos.drawImage(m.getImagem(), m.getX(), m.getY(), this);
                     }
@@ -156,7 +156,7 @@ public class Fase extends JPanel implements ActionListener, MouseListener {
             for (int k = 0; k < vidas.size(); k++) {
                 Vida on = vidas.get(k);
 
-                graficos.drawImage(on.getVida(), on.getX(), on.getY(), null);
+                graficos.drawImage(on.getImagem(), on.getX(), on.getY(), null);
             }
             /////////////////////////////////////////////////////////////////////////////////
 
@@ -210,15 +210,15 @@ public class Fase extends JPanel implements ActionListener, MouseListener {
             }
         }
 
-        for(int i=0 ; i < inimigos1.size() ; i++)
+        for(int i=0 ; i < inimigosComuns.size() ; i++)
         {
-            Inimigo1 in = inimigos1.get(i);
+            InimigoComum in = inimigosComuns.get(i);
 
             if(in.isVisible()){
                 in.update();
             }
             else{
-                inimigos1.remove(i);
+                inimigosComuns.remove(i);
                 i--;
                 explosoes.add(new Explosao(in.getX(), in.getY()));
 
@@ -230,25 +230,25 @@ public class Fase extends JPanel implements ActionListener, MouseListener {
             }
         }
 
-        if(inimigos2 != null && !inimigos2.isEmpty()) {
-            for (int i = 0; i < inimigos2.size(); i++) {
-                Inimigo2 in = inimigos2.get(i);
+        if(inimigosAtiradores != null && !inimigosAtiradores.isEmpty()) {
+            for (int i = 0; i < inimigosAtiradores.size(); i++) {
+                InimigoAtirador in = inimigosAtiradores.get(i);
 
                 if (in.isVisible()) {
                     in.update();
                 } else {
-                    inimigos2.remove(i);
+                    inimigosAtiradores.remove(i);
                     i--;
                     explosoes.add(new Explosao(in.getX(), in.getY()));
                 }
             }
         }
 
-        if(inimigos2 != null && !inimigos2.isEmpty()) {
-            for (int q = 0; q < inimigos2.size(); q++) {
-                List<Tiro_Inimigo2> tiroInimigos = inimigos2.get(q).getTiroInimigo();
+        if(inimigosAtiradores != null && !inimigosAtiradores.isEmpty()) {
+            for (int q = 0; q < inimigosAtiradores.size(); q++) {
+                List<TiroInimigo> tiroInimigos = inimigosAtiradores.get(q).getTiroInimigo();
                 for (int o = 0; o < tiroInimigos.size(); o++) {
-                    Tiro_Inimigo2 m = (Tiro_Inimigo2) tiroInimigos.get(o);
+                    TiroInimigo m = (TiroInimigo) tiroInimigos.get(o);
                     if (m.isVisible()) {
                         m.update();
                     } else {
@@ -263,7 +263,7 @@ public class Fase extends JPanel implements ActionListener, MouseListener {
         if(explosoes != null && !explosoes.isEmpty()) {
             for (int q = 0; q < explosoes.size(); q++) {
                 Explosao y = explosoes.get(q);
-                if (y.isVisivel()) {
+                if (y.isVisible()) {
                     y.update();
                 } else {
                     explosoes.remove(q);
@@ -275,7 +275,7 @@ public class Fase extends JPanel implements ActionListener, MouseListener {
         for (int p = 0; p < vidas.size(); p++) {
 			Vida on = vidas.get(p);
 
-                if(on.isVisivel())
+                if(on.isVisible())
                     on.update();
                 else {
                     vidas.remove(p);
@@ -297,9 +297,9 @@ public class Fase extends JPanel implements ActionListener, MouseListener {
         Rectangle formaTiro;
         
         //Inimigo1 e player
-        for(int i=0 ; i<inimigos1.size() ; i++)
+        for(int i=0 ; i<inimigosComuns.size() ; i++)
         {
-            formaInimigo1 = inimigos1.get(i).getBounds();
+            formaInimigo1 = inimigosComuns.get(i).getBounds();
 
             if(formaNave.intersects(formaInimigo1))
             {
@@ -312,17 +312,17 @@ public class Fase extends JPanel implements ActionListener, MouseListener {
                     emJogo = false;
                 } else {
                     player1.setVida(a - 1);
-                    inimigos1.get(i).setVisible(false);
+                    inimigosComuns.get(i).setVisible(false);
                     break;
                 }
             }
         }
 
         //Inimigo2 & SeusTiros e player
-        for(int i=0 ; i<inimigos2.size() ; i++)
+        for(int i=0 ; i<inimigosAtiradores.size() ; i++)
         {
-            formaInimigo2 = inimigos2.get(i).getBounds();
-            Inimigo2 tempInimigo2 = inimigos2.get(i);
+            formaInimigo2 = inimigosAtiradores.get(i).getBounds();
+            InimigoAtirador tempInimigo2 = inimigosAtiradores.get(i);
             int a = player1.getVida();
 
             if(formaNave.intersects(formaInimigo2))
@@ -339,11 +339,11 @@ public class Fase extends JPanel implements ActionListener, MouseListener {
                 }
             }
 
-            ArrayList<Tiro_Inimigo2> tirosInimigo = tempInimigo2.getTiroInimigo();
+            ArrayList<TiroInimigo> tirosInimigo = tempInimigo2.getTiroInimigo();
 
             for(int j=0 ; j<tirosInimigo.size() ; j++)
             {
-                Tiro_Inimigo2 tempTiroInimigo = tirosInimigo.get(j);
+                TiroInimigo tempTiroInimigo = tirosInimigo.get(j);
                 formaTiroInimigo = tempTiroInimigo.getBounds();
 
                 if(formaNave.intersects(formaTiroInimigo))
@@ -353,7 +353,7 @@ public class Fase extends JPanel implements ActionListener, MouseListener {
                     emJogo = false;
                     } else {
                         player1.setVida(a - 1);
-                        tempTiroInimigo.setVisivel(false);
+                        tempTiroInimigo.setVisible(false);
                         break;
                     }
                 }
@@ -367,8 +367,8 @@ public class Fase extends JPanel implements ActionListener, MouseListener {
 			Tiro temptiro = tiros.get(i);
 			formaTiro = temptiro.getBounds();
 
-			for (int j = 0; j < inimigos1.size(); j++) {
-				Inimigo1 tempRedUfo = inimigos1.get(j);
+			for (int j = 0; j < inimigosComuns.size(); j++) {
+				InimigoComum tempRedUfo = inimigosComuns.get(j);
 				formaInimigo1 = tempRedUfo.getBounds();
 
 				if (formaTiro.intersects(formaInimigo1)) {
@@ -383,8 +383,8 @@ public class Fase extends JPanel implements ActionListener, MouseListener {
 
 			}
 
-			for (int j = 0; j < inimigos2.size(); j++) {
-				Inimigo2 tempGreenFire = inimigos2.get(j);
+			for (int j = 0; j < inimigosAtiradores.size(); j++) {
+				InimigoAtirador tempGreenFire = inimigosAtiradores.get(j);
 				formaInimigo2 = tempGreenFire.getBounds();
 
 				if (formaTiro.intersects(formaInimigo2)) {
@@ -429,7 +429,7 @@ public class Fase extends JPanel implements ActionListener, MouseListener {
 		timer = new Timer(2000, new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				for (int i = 0; i < explosoes.size(); i++) {
-					explosoes.get(i).setVisivel(false);
+					explosoes.get(i).setVisible(false);
 				}
 			}
 
