@@ -6,7 +6,7 @@ public class Container extends JFrame{
 
     public Container()
     {
-        add(new Fase());
+        add(new Fase("res/pixel art _ Tumblr.gif"));
         
         setTitle("Cosmic Odyssey");
         setSize(1024,728);

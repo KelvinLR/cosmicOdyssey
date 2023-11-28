@@ -4,11 +4,12 @@ import songs.EfeitosSonoros;
 
 public class Explosao extends Element {
 
-	private static final int LARGURA = 6;
-	private static int VELOCIDADE = 2;
+	private static final int LARGURA = 6; // Largura do objeto
+	private static int VELOCIDADE = 2; // Velocidade do objeto
 
+	// Construtor da classe Explosao
 	public Explosao(int x, int y) {
-		super(x, y, "res/explosion1.gif");
+		super(x, y, "res/explosion1.gif"); // Chamada do construtor da classe abstrata Element
 		somExplosao();
 	}
 
@@ -20,6 +21,7 @@ public class Explosao extends Element {
 		}
 	}
 
+	// Responsável pelo efeito sonoro de Explosao
 	public void somExplosao() {
 		EfeitosSonoros a = new EfeitosSonoros();
 		a.tocarSomExplosao();

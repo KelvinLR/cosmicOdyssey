@@ -37,13 +37,13 @@ public class Fase extends JPanel implements ActionListener, MouseListener {
 
     private static int numeroInimigos = 20;
 
-    public Fase()
-    {
+    // Construtor da classe Fase com a referência da tela de fundo
+    public Fase(String ref) {
         setFocusable(true);
         setDoubleBuffered(true);
         emJogo = true;
 
-        ImageIcon referencia = new ImageIcon(getClass().getClassLoader().getResource("res/pixel art _ Tumblr.gif"));
+        ImageIcon referencia = new ImageIcon(getClass().getClassLoader().getResource(ref));
         fundo = referencia.getImage();
         //ImageIcon gamerOver = new ImageIcon(getClass().getClassLoader().getResource("res/fimdejogo.png"));
         //this.gameOver = referencia.getImage();
@@ -135,7 +135,7 @@ public class Fase extends JPanel implements ActionListener, MouseListener {
             }
 
             for (int i = 0; i < inimigosAtiradores.size(); i++) {
-                List<TiroInimigo> tirosInimigo = inimigosAtiradores.get(i).getTiroInimigo();
+                List<TiroInimigo> tirosInimigo = inimigosAtiradores.get(i).getTirosInimigo();
                 for (int o = 0; o < tirosInimigo.size(); o++) {
                     TiroInimigo m = (TiroInimigo) tirosInimigo.get(o);
                     if (m.getBounds().intersects(0, 0, 1024, 728)) {
@@ -246,7 +246,7 @@ public class Fase extends JPanel implements ActionListener, MouseListener {
 
         if(inimigosAtiradores != null && !inimigosAtiradores.isEmpty()) {
             for (int q = 0; q < inimigosAtiradores.size(); q++) {
-                List<TiroInimigo> tiroInimigos = inimigosAtiradores.get(q).getTiroInimigo();
+                List<TiroInimigo> tiroInimigos = inimigosAtiradores.get(q).getTirosInimigo();
                 for (int o = 0; o < tiroInimigos.size(); o++) {
                     TiroInimigo m = (TiroInimigo) tiroInimigos.get(o);
                     if (m.isVisible()) {
@@ -334,12 +334,12 @@ public class Fase extends JPanel implements ActionListener, MouseListener {
                     emJogo = false;
                 } else {
                     player1.setVida(a - 1);
-                    tempInimigo2.setVisivel(false);
+                    tempInimigo2.setVisible(false);
                     break;
                 }
             }
 
-            ArrayList<TiroInimigo> tirosInimigo = tempInimigo2.getTiroInimigo();
+            ArrayList<TiroInimigo> tirosInimigo = tempInimigo2.getTirosInimigo();
 
             for(int j=0 ; j<tirosInimigo.size() ; j++)
             {
@@ -392,7 +392,7 @@ public class Fase extends JPanel implements ActionListener, MouseListener {
 					//ImageIcon referencia2 = new ImageIcon("res\\explosion1.gif");
 					// explosion = referencia2.getImage();
 					//emExplosao = true;
-					tempGreenFire.setVisivel(false);
+					tempGreenFire.setVisible(false);
 					temptiro.setVisible(false);
                     break;
 				}

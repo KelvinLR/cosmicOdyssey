@@ -1,12 +1,8 @@
 package elements;
 
-import java.awt.Image;
-import java.awt.Rectangle;
-
 public class Vida extends Element {
 
-	private static final int LARGURA = 1024;
-	private static int VELOCIDADE = 2;
+	private static int VELOCIDADE = 2; // Velocidade do objeto
 
 	public Vida(int x, int y) {
 		// Construtor da classe abstrata Element
