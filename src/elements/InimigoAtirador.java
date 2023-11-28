@@ -5,7 +5,7 @@ import java.util.ArrayList;
 
 public class InimigoAtirador extends Nave {   
     private boolean tiro;
-    private ArrayList<TiroInimigo> tirosInimigo;
+    private ArrayList<TiroInimigo> tirosInimigo; // Tiros que o inimigo realizará
 
     private static final int LARGURA = 1024; // Largura do InimigoAtirador
     private static int VELOCIDADE = 2; // Velocidade do InimigoAtirador
