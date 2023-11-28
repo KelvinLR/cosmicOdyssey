@@ -6,6 +6,7 @@ public class Container extends JFrame{
 
     public Container()
     {
+        // Nova instância da classe Fase
         add(new Fase("res/pixel art _ Tumblr.gif"));
         
         setTitle("Cosmic Odyssey");
