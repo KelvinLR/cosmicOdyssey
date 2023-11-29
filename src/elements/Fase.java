@@ -26,6 +26,7 @@ public class Fase extends JPanel implements ActionListener, MouseListener {
 
     private Image fundo;
     private Player player1;
+    private Player player2;
     private Timer timer;
     private ArrayList<InimigoComum> inimigosComuns;
     private ArrayList<InimigoAtirador> inimigosAtiradores;
@@ -49,7 +50,8 @@ public class Fase extends JPanel implements ActionListener, MouseListener {
         //ImageIcon gamerOver = new ImageIcon(getClass().getClassLoader().getResource("res/fimdejogo.png"));
         //this.gameOver = referencia.getImage();
 
-        player1 = new Player();
+        player1 = new Player((int)1);
+        player2 = new Player((int)2);
 
         powerUpVida = 0;
         vidas = new ArrayList<Vida>();
@@ -108,6 +110,7 @@ public class Fase extends JPanel implements ActionListener, MouseListener {
         if (emJogo) {
             graficos.drawImage(fundo, 0, 0, null);
             graficos.drawImage(player1.getImagem(), player1.getX(), player1.getY(), this);
+            graficos.drawImage(player2.getImagem(), player2.getX(), player2.getY(), this);
 
             ArrayList<Tiro> tiros = player1.getTiros();
 
@@ -194,11 +197,16 @@ public class Fase extends JPanel implements ActionListener, MouseListener {
         g.dispose();
     }
 
+    
+
     @Override
     public void actionPerformed(ActionEvent e) {
 
         ArrayList<Tiro> tiros = player1.getTiros();
+        ArrayList<Tiro> tiros2 = player2.getTiros();
+
         player1.update();
+        player2.update();
         
         for(int i=0 ; i < tiros.size() ; i++)
         {
@@ -210,6 +218,7 @@ public class Fase extends JPanel implements ActionListener, MouseListener {
                 i--;
             }
         }
+        
 
         for(int i=0 ; i < inimigosComuns.size() ; i++)
         {
@@ -443,19 +452,22 @@ public class Fase extends JPanel implements ActionListener, MouseListener {
         @Override
         public void keyPressed(KeyEvent e) {
             player1.keyPressed(e);
+            player2.keyPressed(e);
         }
     
         @Override
         public void keyReleased(KeyEvent e) {
             player1.keyReleased(e);
+            player2.keyReleased(e);
         }
     }
 
      private class MouseAdaptado extends MouseAdapter {
         @Override
         public void mousePressed(MouseEvent e) {
-            if(emJogo)
-            player1.mousePressed(e);
+            if(emJogo) {
+                player1.mousePressed(e);
+            }
         }
     }
 

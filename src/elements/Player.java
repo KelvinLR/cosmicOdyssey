@@ -17,11 +17,28 @@ public class Player {
     private boolean isVisible;
     private int vida;
     private int score;
+    private int p;
 
-    public Player()
+    public Player(int p)
     {
-        this.x = 100;
-        this.y = 100;
+        this.p = p;
+
+        switch (p) {
+            case 1:
+                this.x = 100;
+                this.y = 100;
+                break;
+            case 2:
+
+                this.x = 100;
+                this.y = 300 ;
+                break;
+            default:
+                break;
+        }
+            
+
+        
         isVisible = true;
 
         this.vida = 5;
@@ -85,25 +102,46 @@ public class Player {
     public void keyPressed(KeyEvent tecla)
     {   
         int codigo = tecla.getKeyCode();
-
-        if(codigo == KeyEvent.VK_W)
-        {
-            dy = -VELOCIDADE;
-        }
-
-        if(codigo == KeyEvent.VK_S)
-        {
-            dy = VELOCIDADE;
-        }
-
-        if(codigo == KeyEvent.VK_A)
-        {
-            dx = -VELOCIDADE;
-        }
-
-        if(codigo == KeyEvent.VK_D)
-        {
-            dx = VELOCIDADE;
+        if(p==1){
+            if(codigo == KeyEvent.VK_W)
+            {
+                dy = -VELOCIDADE;
+            }
+    
+            if(codigo == KeyEvent.VK_S)
+            {
+                dy = VELOCIDADE;
+            }
+    
+            if(codigo == KeyEvent.VK_A)
+            {
+                dx = -VELOCIDADE;
+            }
+    
+            if(codigo == KeyEvent.VK_D)
+            {
+                dx = VELOCIDADE;
+            }
+        }else if(p==2){
+            if(codigo == KeyEvent.VK_UP)
+            {
+                dy = -VELOCIDADE;
+            }
+    
+            if(codigo == KeyEvent.VK_DOWN)
+            {
+                dy = VELOCIDADE;
+            }
+    
+            if(codigo == KeyEvent.VK_LEFT)
+            {
+                dx = -VELOCIDADE;
+            }
+    
+            if(codigo == KeyEvent.VK_RIGHT)
+            {
+                dx = VELOCIDADE;
+            }
         }
         
     }
@@ -117,25 +155,46 @@ public class Player {
     public void keyReleased(KeyEvent tecla)
     {   
         int codigo = tecla.getKeyCode();
-
-        if(codigo == KeyEvent.VK_W)
-        {
-            dy = 0;
-        }
-
-        if(codigo == KeyEvent.VK_S)
-        {
-            dy = 0;
-        }
-
-        if(codigo == KeyEvent.VK_A)
-        {
-            dx = 0;
-        }
-
-        if(codigo == KeyEvent.VK_D)
-        {
-            dx = 0;
+        if(p==1){
+            if(codigo == KeyEvent.VK_W)
+            {
+                dy = 0;
+            }
+    
+            if(codigo == KeyEvent.VK_S)
+            {
+                dy = 0;
+            }
+    
+            if(codigo == KeyEvent.VK_A)
+            {
+                dx = 0;
+            }
+    
+            if(codigo == KeyEvent.VK_D)
+            {
+                dx = 0;
+            }
+        }else if(p==2){
+            if(codigo == KeyEvent.VK_UP)
+            {
+                dy = 0;
+            }
+    
+            if(codigo == KeyEvent.VK_DOWN)
+            {
+                dy = 0;
+            }
+    
+            if(codigo == KeyEvent.VK_LEFT)
+            {
+                dx = 0;
+            }
+    
+            if(codigo == KeyEvent.VK_RIGHT)
+            {
+                dx = 0;
+            }
         }
     }
 
