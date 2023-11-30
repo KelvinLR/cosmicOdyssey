@@ -122,6 +122,10 @@ public class Player {
             {
                 dx = VELOCIDADE;
             }
+            if(codigo == KeyEvent.VK_SPACE)
+            {
+                tiroSimples();
+            }
         }else if(p==2){
             if(codigo == KeyEvent.VK_UP)
             {
@@ -142,15 +146,14 @@ public class Player {
             {
                 dx = VELOCIDADE;
             }
+            if(codigo == KeyEvent.VK_COMMA)
+            {
+                tiroSimples();
+            }
         }
         
     }
 
-    public void mousePressed(MouseEvent evento) {
-        if (evento.getButton() == MouseEvent.BUTTON1) {
-            tiroSimples();
-        }
-    }
 
     public void keyReleased(KeyEvent tecla)
     {   
