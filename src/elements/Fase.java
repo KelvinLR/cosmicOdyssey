@@ -11,9 +11,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseAdapter;
 import java.awt.event.MouseListener;
-import java.io.File;
 import java.io.IOException;
 import javax.swing.ImageIcon;
 import javax.swing.JPanel;
@@ -22,7 +20,7 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Fase extends JPanel implements ActionListener, MouseListener {
+public class Fase extends JPanel implements ActionListener {
 
     private Image fundo;
     private Player player1;
@@ -55,13 +53,12 @@ public class Fase extends JPanel implements ActionListener, MouseListener {
         vidas = new ArrayList<Vida>();
 
         addKeyListener(new TecladoAdapter());
-        addMouseListener(new MouseAdaptado());
 
         waitForSeconds();
         Timer timer = new Timer(5,this);
         timer.start();
 
-        inicializaInimigos();
+        spawnEnemies();
         this.explosoes = new ArrayList<>();
         minecraftFont = carregarFonte();
     }
@@ -84,7 +81,7 @@ public class Fase extends JPanel implements ActionListener, MouseListener {
     }
 
 
-    public void inicializaInimigos()
+    public void spawnEnemies()
     {
         inimigosComuns = new ArrayList<InimigoComum>();
         for (int i = 0; i < numeroInimigos; i++) {
@@ -101,22 +98,21 @@ public class Fase extends JPanel implements ActionListener, MouseListener {
 		}
 
     }
-    // public void arrayTiros(int p){
-              
 
-    //     if(p==1){
-    //         for (int i = 0; i < tiros.size(); i++) {       
-    //         Tiro t = tiros.get(i);
-    //             graficos.drawImage(t.getImagem(), t.getX(), t.getY(), this);
-    //         }  
-    //     }else{
-    //         for (int i = 0; i < tiros2.size(); i++) {
-    //             Tiro t = tiros2.get(i);
-    //                 graficos.drawImage(t.getImagem(), t.getX(), t.getY(), this);
-    //         }
-    //     }
-    // }
+    public void arrayShot(Graphics g){
+        ArrayList<Tiro> tiros = player1.getTiros();
+        ArrayList<Tiro> tiros2 = player2.getTiros();
+        Graphics2D graficos = (Graphics2D) g;
+        for (int i = 0; i < tiros.size(); i++) {
+            Tiro t = tiros.get(i);
+            graficos.drawImage(t.getImagem(), t.getX(), t.getY(), this);
+        }
 
+        for (int i = 0; i < tiros2.size(); i++) {
+            Tiro t = tiros2.get(i);
+            graficos.drawImage(t.getImagem(), t.getX(), t.getY(), this);
+        }
+    }
 
     public void paint(Graphics g) {
         Graphics2D graficos = (Graphics2D) g;
@@ -126,20 +122,7 @@ public class Fase extends JPanel implements ActionListener, MouseListener {
             graficos.drawImage(player1.getImagem(), player1.getX(), player1.getY(), this);
             graficos.drawImage(player2.getImagem(), player2.getX(), player2.getY(), this);
 
-            ArrayList<Tiro> tiros = player1.getTiros();
-            ArrayList<Tiro> tiros2 = player2.getTiros();  
-            
-            for (int i = 0; i < tiros.size(); i++) {       
-            Tiro t = tiros.get(i);
-                graficos.drawImage(t.getImagem(), t.getX(), t.getY(), this);
-            } 
-
-            for (int i = 0; i < tiros2.size(); i++) {
-                Tiro t = tiros2.get(i);
-                    graficos.drawImage(t.getImagem(), t.getX(), t.getY(), this);
-            }
-            // arrayTiros(1);
-            // arrayTiros(2);
+            arrayShot(g);
 
             //Inimigos 1
             for (int i = 0; i < inimigosComuns.size(); i++) {
@@ -185,11 +168,18 @@ public class Fase extends JPanel implements ActionListener, MouseListener {
             /////////////////////////////////////////////////////////////////////////////////
 
             //Status da vida
-            int a = 10;
+            int x1 = 10;
             for (int j = 0; j < player1.getVida(); j++) {
                 ImageIcon vida = new ImageIcon(getClass().getClassLoader().getResource("res/Vida.png"));
-                graficos.drawImage(vida.getImage(), a, 10, null);
-                a += 30;
+                graficos.drawImage(vida.getImage(), x1, 10, null);
+                x1 += 30;
+            }
+
+            int x2 = 10;
+            for (int j = 0; j < player2.getVida(); j++) {
+                ImageIcon vida = new ImageIcon(getClass().getClassLoader().getResource("res/Vida.png"));
+                graficos.drawImage(vida.getImage(), x2, 40, null);
+                x2 += 30;
             }
             /////////////////////////////////////////////////////////////////////////////////////
 
@@ -546,6 +536,7 @@ public class Fase extends JPanel implements ActionListener, MouseListener {
 					vidas.remove(i);
 				}
                 break;
+
 			}
         }
 
@@ -583,42 +574,4 @@ public class Fase extends JPanel implements ActionListener, MouseListener {
         }
     }
 
-     private class MouseAdaptado extends MouseAdapter {
-        @Override
-        public void mousePressed(MouseEvent e) {
-            if(emJogo) {
-                player1.mousePressed(e);
-            }
-        }
-    }
-
-    @Override
-    public void mouseClicked(MouseEvent e) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'mouseClicked'");
-    }
-
-    @Override
-    public void mousePressed(MouseEvent e) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'mousePressed'");
-    }
-
-    @Override
-    public void mouseReleased(MouseEvent e) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'mouseReleased'");
-    }
-
-    @Override
-    public void mouseEntered(MouseEvent e) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'mouseEntered'");
-    }
-
-    @Override
-    public void mouseExited(MouseEvent e) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'mouseExited'");
-    }
 }

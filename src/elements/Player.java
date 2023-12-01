@@ -19,6 +19,7 @@ public class Player {
     private int score;
     private int p;
 
+
     public Player(int p)
     {
         this.p = p;
