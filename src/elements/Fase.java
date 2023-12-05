@@ -540,6 +540,20 @@ public class Fase extends JPanel implements ActionListener {
 			}
         }
 
+        for (int i = 0; i < vidas.size(); i++) {
+            Vida tempPowerUpVida = vidas.get(i);
+            formaPowerUpVida = tempPowerUpVida.getBounds();
+
+            if (formaNave2.intersects(formaPowerUpVida)) {
+                if (player2.getVida() < 5) {
+                    player2.setVida(player2.getVida() + 1);
+                    vidas.remove(i);
+                }
+                break;
+
+            }
+        }
+
     }
 
     // Temporizador

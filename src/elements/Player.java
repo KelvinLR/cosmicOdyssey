@@ -125,7 +125,9 @@ public class Player {
             }
             if(codigo == KeyEvent.VK_SPACE)
             {
-                tiroSimples();
+                if(tiros.size()<20){
+                    tiroSimples();
+                }
             }
         }else if(p==2){
             if(codigo == KeyEvent.VK_UP)
@@ -149,7 +151,9 @@ public class Player {
             }
             if(codigo == KeyEvent.VK_COMMA)
             {
-                tiroSimples();
+                if(tiros.size()<20){
+                    tiroSimples();
+                }
             }
         }
         
