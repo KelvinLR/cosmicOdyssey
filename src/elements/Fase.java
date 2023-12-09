@@ -58,7 +58,7 @@ public class Fase extends JPanel implements ActionListener {
         Timer timer = new Timer(5,this);
         timer.start();
 
-        spawnEnemies();
+        spawnEnemies1();
         this.explosoes = new ArrayList<>();
         minecraftFont = carregarFonte();
     }
@@ -81,7 +81,7 @@ public class Fase extends JPanel implements ActionListener {
     }
 
 
-    public void spawnEnemies()
+    public void spawnEnemies1()
     {
         inimigosComuns = new ArrayList<InimigoComum>();
         for (int i = 0; i < numeroInimigos; i++) {
@@ -90,13 +90,16 @@ public class Fase extends JPanel implements ActionListener {
             inimigosComuns.add(new InimigoComum(x, y));
 		}
 
+        spawnEnemies2();
+    }
+
+    public void spawnEnemies2(){
         inimigosAtiradores = new ArrayList<InimigoAtirador>();
         for (int i = 0; i < numeroInimigos; i++) {
-			int x = (int) ((Math.random() * 12000) + 1024);
-			int y = (int) ((Math.random() * 580) + 40);
+            int x = (int) ((Math.random() * 12000) + 1024);
+            int y = (int) ((Math.random() * 580) + 40);
             inimigosAtiradores.add(new InimigoAtirador(x, y));
-		}
-
+        }
     }
 
     public void arrayShot(Graphics g){
@@ -252,7 +255,7 @@ public class Fase extends JPanel implements ActionListener {
                 inimigosComuns.remove(i);
                 i--;
                 explosoes.add(new Explosao(in.getX(), in.getY()));
-
+                System.out.println(inimigosComuns.size());
                 powerUpVida++;
                 if (powerUpVida == 5) {
 					vidas.add(new Vida(in.getX(), in.getY()));
@@ -261,7 +264,26 @@ public class Fase extends JPanel implements ActionListener {
             }
         }
 
-        if(inimigosAtiradores != null && !inimigosAtiradores.isEmpty()) {
+        if(inimigosAtiradores != null && !inimigosAtiradores.isEmpty() && inimigosComuns.isEmpty()) {
+            for(int i=0 ; i < inimigosComuns.size() ; i++)
+            {
+                InimigoComum in = inimigosComuns.get(i);
+
+                if(in.isVisible()){
+                    in.update();
+                }
+                else{
+                    inimigosComuns.remove(i);
+                    i--;
+                    explosoes.add(new Explosao(in.getX(), in.getY()));
+                    System.out.println(inimigosComuns.size());
+                    powerUpVida++;
+                    if (powerUpVida == 5) {
+                        vidas.add(new Vida(in.getX(), in.getY()));
+                        powerUpVida = 0;
+                    }
+                }
+            }
             for (int i = 0; i < inimigosAtiradores.size(); i++) {
                 InimigoAtirador in = inimigosAtiradores.get(i);
 
