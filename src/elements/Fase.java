@@ -38,13 +38,13 @@ public class Fase extends JPanel implements ActionListener, MouseListener {
     private static int numeroInimigos = 20;
 
     // Construtor da classe Fase com a referência da tela de fundo.
-    public Fase(String ref) {
+    public Fase(String path) {
         setFocusable(true);
         setDoubleBuffered(true);
         emJogo = true;
 
         
-        ImageIcon referencia = new ImageIcon(getClass().getClassLoader().getResource(ref));
+        ImageIcon referencia = new ImageIcon(getClass().getClassLoader().getResource(path));
         fundo = referencia.getImage();
         //ImageIcon gamerOver = new ImageIcon(getClass().getClassLoader().getResource("res/fimdejogo.png"));
         //this.gameOver = referencia.getImage();

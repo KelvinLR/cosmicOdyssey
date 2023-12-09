@@ -12,9 +12,7 @@ public class InimigoComum extends Nave {
 
     // Implementação do método abstrato actionPerformed()
     @Override
-	public void actionPerformed(ActionEvent e) {
-
-	}
+	public void actionPerformed(ActionEvent e) {}
 
     // Implementação do método abstrato update()
     public void update(){

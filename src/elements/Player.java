@@ -29,7 +29,7 @@ public class Player {
 
         tiros = new ArrayList<Tiro>();
 
-        ImageIcon referencia = new ImageIcon(getClass().getClassLoader().getResource("res/spaceship2.png"));
+        ImageIcon referencia = new ImageIcon(getClass().getClassLoader().getResource("res/player1-spaceship-lowres-fix.png"));
         this.imagem = referencia.getImage();
         this.altura = imagem.getHeight(null);
         this.largura = imagem.getWidth(null);
@@ -39,16 +39,16 @@ public class Player {
 		
         
         if (vida == 1) {
-			ImageIcon referencia = new ImageIcon(getClass().getClassLoader().getResource("res/spaceship2Hitmed.png"));
+			ImageIcon referencia = new ImageIcon(getClass().getClassLoader().getResource("res/player1-spaceship-lowres-fix-middamage.png"));
 			imagem = referencia.getImage();
 
 		}
 		else if (vida == 0) {
-			ImageIcon referencia = new ImageIcon(getClass().getClassLoader().getResource("res/spaceship2Hit.png"));
+			ImageIcon referencia = new ImageIcon(getClass().getClassLoader().getResource("res/player1-spaceship-lowres-fix-highdamage.png"));
 			imagem = referencia.getImage();
 		}
         else{
-            ImageIcon referencia = new ImageIcon(getClass().getClassLoader().getResource("res/spaceship2.png"));
+            ImageIcon referencia = new ImageIcon(getClass().getClassLoader().getResource("res/player1-spaceship-lowres-fix.png"));
             this.imagem = referencia.getImage();
         }
 
