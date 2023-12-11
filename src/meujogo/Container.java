@@ -13,7 +13,7 @@ public class Container extends JFrame {
         if(op == 1) {
             add(new Menu(this));
         } else if (op == 2) {
-            add(new Fase());
+            add(new Fase(this));
         }
 
 		setTitle("Cosmic Odyssey: Luzes do Infinito");
@@ -24,7 +24,7 @@ public class Container extends JFrame {
 	    setVisible(true);
     }
 
-    public static void main(String[] args){
+    public static void main(String[] args) {
         new Container(1);
     }
 }

@@ -1,6 +1,9 @@
 package elements;
+
+import meujogo.Container;
+
 import java.awt.Color;
-import java.awt.Container;
+//import java.awt.Container;
 import java.awt.Font;
 import java.awt.FontFormatException;
 import java.awt.Graphics;
@@ -34,8 +37,9 @@ public class Fase extends JPanel implements ActionListener, MouseListener {
     private List<Explosao> explosoes;
     private boolean emJogo, emExplosao;
     private int powerUpVida = 0;
+    private Container container;
 
-    public Fase() {
+    public Fase(Container container) {
         setFocusable(true);
         setDoubleBuffered(true);
         emJogo = true;
@@ -59,6 +63,8 @@ public class Fase extends JPanel implements ActionListener, MouseListener {
 
         inicializaInimigos();
         inicializaExplosoes();
+
+        this.container = container;
     }
 
     public void inicializaExplosoes() {
@@ -200,8 +206,9 @@ public class Fase extends JPanel implements ActionListener, MouseListener {
 
         else
         {
-            ImageIcon gameOver = new ImageIcon(getClass().getClassLoader().getResource("res/fimdejogo.png"));
+            ImageIcon gameOver = new ImageIcon(getClass().getClassLoader().getResource("res/fimdejogo1.png"));
             graficos.drawImage(gameOver.getImage(), 0, 0, null);
+            //Adicionar a de vitória
         }
 
         g.dispose();
@@ -447,6 +454,12 @@ public class Fase extends JPanel implements ActionListener, MouseListener {
         @Override
         public void keyPressed(KeyEvent e) {
             player1.keyPressed(e);
+
+            if(e.getKeyCode() == KeyEvent.VK_ESCAPE && !emJogo) {
+                Container.gameState = "MENU";
+                new Container(1);
+				container.dispose();
+            }
         }
     
         @Override

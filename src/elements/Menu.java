@@ -1,5 +1,5 @@
 package elements;
-import meujogo.Container;
+import meujogo.*;
 
 import java.awt.Color;
 import java.awt.Font;
