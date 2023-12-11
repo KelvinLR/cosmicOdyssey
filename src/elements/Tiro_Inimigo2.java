@@ -23,7 +23,7 @@ public class Tiro_Inimigo2 {
 	}
 
 	public void load() {
-		ImageIcon referencia = new ImageIcon(getClass().getClassLoader().getResource("res/TiroInimigo.png"));
+		ImageIcon referencia = new ImageIcon(getClass().getClassLoader().getResource("res/TiroPoder1.png"));
 		Imagem = referencia.getImage();
 
 		this.altura = Imagem.getHeight(null);

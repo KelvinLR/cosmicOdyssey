@@ -54,7 +54,7 @@ public class Inimigo2 extends Nave implements ActionListener {
 
     public void load()
     {
-        ImageIcon referencia = new ImageIcon(getClass().getClassLoader().getResource("res/enemy2.png"));
+        ImageIcon referencia = new ImageIcon(getClass().getClassLoader().getResource("res/alien2.png"));
         this.imagem = referencia.getImage();
 
         this.altura = imagem.getHeight(null);
