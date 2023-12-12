@@ -1,8 +1,0 @@
-<component name="ArtifactManager">
-  <artifact type="jar" name="Cosmic Odyssey - intelj:jar">
-    <output-path>$PROJECT_DIR$/out/artifacts/Cosmic_Odyssey___intelj_jar</output-path>
-    <root id="archive" name="Cosmic Odyssey - intelj.jar">
-      <element id="module-output" name="Cosmic Odyssey - intelj" />
-    </root>
-  </artifact>
-</component>
