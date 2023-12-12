@@ -146,6 +146,26 @@ public class FaseSingle extends JPanel implements ActionListener {
             int y = 510; // Define a posição vertical (ajuste conforme necessário)
 
             graficos.drawString(scoreText, x, y);
+
+            if(!gameOverHandled) {
+
+                gameOverHandled = true;
+
+                // Criando um Timer com atraso de 10 segundos
+                Timer timer = new Timer(3000, new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        if (Container.frameAtual != null) {
+                            Container.frameAtual.fecharContainerAtual();
+                            Container.gameState = "MENU";
+                            new Container(1);
+                        }
+                    }
+                });
+
+                timer.setRepeats(false);
+                timer.start();
+            }
         }
         else{
             if (emJogo) {

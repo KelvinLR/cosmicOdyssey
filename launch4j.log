@@ -34,3 +34,21 @@ Launcher:	C:\Program Files\Java\jre-1.8\bin\javaw.exe
 Launcher args:	-jar "D:\Usuário\Desktop\Arquivos Acadêmicos\Programação\Programas\Java\Trabalhos\Cosmic Odyssey - intelj\CosmicOdyssey.exe"
 Args length:	124/32768 chars
 Exit code:	0
+
+
+Version:	3.9
+CmdLine:	D:\Usuário\Desktop\Arquivos Acadêmicos\Programação\Programas\Java\Trabalhos\Cosmic Odyssey - intelj\CosmicOdyssey.exe --l4j-debug
+WOW64:		yes
+Working dir:	D:\Usuário\Desktop\Arquivos Acadêmicos\Programação\Programas\Java\Trabalhos\Cosmic Odyssey - intelj\.
+64-bit search:	SOFTWARE\JavaSoft\Java Runtime Environment...
+Check:		SOFTWARE\JavaSoft\Java Runtime Environment\1.8
+Ignore:		1.8
+Check:		SOFTWARE\JavaSoft\Java Runtime Environment\1.8.0_391
+Check launcher:	C:\Program Files\Java\jre-1.8\bin\javaw.exe (OK)
+Match:		1.8.0_391
+64-bit search:	SOFTWARE\JavaSoft\Java Development Kit...
+Runtime used:	1.8.0_391 (64-bit)
+Launcher:	C:\Program Files\Java\jre-1.8\bin\javaw.exe
+Launcher args:	-jar "D:\Usuário\Desktop\Arquivos Acadêmicos\Programação\Programas\Java\Trabalhos\Cosmic Odyssey - intelj\CosmicOdyssey.exe"
+Args length:	124/32768 chars
+Exit code:	0
