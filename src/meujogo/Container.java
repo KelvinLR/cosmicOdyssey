@@ -7,8 +7,8 @@ import elements.Menu;
 public class Container extends JFrame {
     public static final int WIDTH = 1024;
     public static final int HEIGHT = 728;
-
     public static String gameState = "MENU";
+    public static Container frameAtual;
 
     public Container(int op) {   
         if(op == 1) {
@@ -27,6 +27,12 @@ public class Container extends JFrame {
 		setLocationRelativeTo(null);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	    setVisible(true);
+
+        frameAtual = this;
+    }
+
+    public void fecharContainerAtual() {
+        dispose();
     }
 
     public static void main(String[] args){

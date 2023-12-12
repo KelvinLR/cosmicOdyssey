@@ -71,6 +71,7 @@ public class Menu extends JPanel implements ActionListener {
 				this.container.dispose();
 			} else if (this.currentOption == 1) {
 				new Container(3);
+				this.container.dispose();
 			} else if (this.currentOption == 2) {
 				System.exit(0);
 			}
@@ -79,22 +80,31 @@ public class Menu extends JPanel implements ActionListener {
 	}
 
 	public void render(Graphics g) {
-		Font minecraftFont = this.carregarFonte();
-		minecraftFont = minecraftFont.deriveFont(1, 40.0F);
+		Font minecraftFont = this.carregarFonte2();
+
+		minecraftFont = minecraftFont.deriveFont(Font.PLAIN, 70);
 		g.setFont(minecraftFont);
 		g.setColor(Color.WHITE);
+
 		int screenWidth = this.getWidth();
 		int screenHeight = this.getHeight();
+
 		String texto1 = "COSMIC";
 		int larguraTexto1 = g.getFontMetrics().stringWidth(texto1);
-		int xTexto1 = 512 - 2 * larguraTexto1;
+		int xTexto1 = 137;
 		g.drawString(texto1, xTexto1, 100);
+
 		String texto2 = "ODYSSEY";
 		int larguraTexto2 = g.getFontMetrics().stringWidth(texto2);
-		int xTexto2 = 159;
+		int xTexto2 = 120;
 		g.drawString(texto2, xTexto2, 145);
-		minecraftFont = minecraftFont.deriveFont(0, 18.0F);
+
+		minecraftFont = this.carregarFonte();
+
+		minecraftFont = minecraftFont.deriveFont(Font.PLAIN, 18.0F);
 		g.setFont(minecraftFont);
+		g.setColor(Color.WHITE);
+
 		g.drawString("SINGLEPLAYER", 178, 240);
 		g.drawString("MULTIPLAYER", 186, 270);
 		g.drawString("QUIT", 228, 300);
@@ -120,7 +130,22 @@ public class Menu extends JPanel implements ActionListener {
 		try {
 			InputStream fontStream = this.getClass().getResourceAsStream("/res/Fonts/Minecraft.ttf");
 			if (fontStream != null) {
-				return Font.createFont(0, fontStream).deriveFont(1, 18.0F);
+				return Font.createFont(0, fontStream).deriveFont(Font.BOLD, 18.0F);
+			}
+
+			System.err.println("Arquivo de fonte não encontrado.");
+		} catch (FontFormatException | IOException var2) {
+			var2.printStackTrace();
+		}
+
+		return new Font("Arial", 0, 18);
+	}
+
+	public Font carregarFonte2() {
+		try {
+			InputStream fontStream = this.getClass().getResourceAsStream("/res/Fonts/ARCADECLASSIC.TTF");
+			if (fontStream != null) {
+				return Font.createFont(0, fontStream).deriveFont(Font.BOLD, 18.0F);
 			}
 
 			System.err.println("Arquivo de fonte não encontrado.");

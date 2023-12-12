@@ -1,4 +1,5 @@
 package elements;
+import meujogo.Container;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.FontFormatException;
@@ -35,6 +36,7 @@ public class Fase extends JPanel implements ActionListener {
     private int powerUpVida = 0;
     private Font minecraftFont;
     private static int numeroInimigos = 50;
+    private boolean gameOverHandled = false;
 
     // Construtor da classe Fase com a referência da tela de fundo.
     public Fase(String ref) {
@@ -151,6 +153,7 @@ public class Fase extends JPanel implements ActionListener {
             int y = 510; // Define a posição vertical (ajuste conforme necessário)
 
             graficos.drawString(scoreText, x, y);
+
         }
         else{
             if (emJogo) {
@@ -317,6 +320,26 @@ public class Fase extends JPanel implements ActionListener {
                 int y = 430; // Define a posição vertical (ajuste conforme necessário)
 
                 graficos.drawString(scoreText, x, y);
+
+                if(!gameOverHandled) {
+
+                    gameOverHandled = true;
+
+                    // Criando um Timer com atraso de 10 segundos
+                    Timer timer = new Timer(3000, new ActionListener() {
+                        @Override
+                        public void actionPerformed(ActionEvent e) {
+                            if (Container.frameAtual != null) {
+                                Container.frameAtual.fecharContainerAtual();
+                                Container.gameState = "MENU";
+                                new Container(1);
+                            }
+                        }
+                    });
+
+                    timer.setRepeats(false);
+                    timer.start();
+                }
             }
         }
 
@@ -329,7 +352,7 @@ public class Fase extends JPanel implements ActionListener {
         if(!player1.isVisible() && !player2.isVisible())
             emJogo = false;
 
-        if(emJogo) {
+        if(emJogo && !youWin) {
 
             ArrayList<Tiro> tiros = player1.getTiros();
             ArrayList<Tiro> tiros2 = player2.getTiros();
@@ -427,7 +450,7 @@ public class Fase extends JPanel implements ActionListener {
                         y.update();
                     } else {
                         explosoes.remove(q);
-                        //q--;
+                        q--;
                     }
                 }
             }
@@ -458,7 +481,6 @@ public class Fase extends JPanel implements ActionListener {
                         chefao.update(player2.getX(), player2.getY());
                         if (chefao.getTiroBoss().isEmpty()) {
                             chefao.tiroBoss();
-                            chefao.tiroBoss();
                         }
                     }
                 }
@@ -477,7 +499,6 @@ public class Fase extends JPanel implements ActionListener {
                     if (chefao.isVisivel()) {
                         chefao.update(player1.getX(), player1.getY());
                         if (chefao.getTiroBoss().isEmpty()) {
-                            chefao.tiroBoss();
                             chefao.tiroBoss();
                         }
                     }
@@ -555,9 +576,10 @@ public class Fase extends JPanel implements ActionListener {
             }
 
             collisions();
+            repaint();
         }
 
-        repaint();
+        //repaint();
     }
 
     public void collisions()

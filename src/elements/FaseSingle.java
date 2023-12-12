@@ -1,4 +1,6 @@
 package elements;
+import meujogo.Container;
+
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.FontFormatException;
@@ -34,6 +36,7 @@ public class FaseSingle extends JPanel implements ActionListener {
     private int powerUpVida = 0;
     private Font minecraftFont;
     private static int numeroInimigos = 40;
+    private boolean gameOverHandled = false;
 
     // Construtor da classe Fase com a referência da tela de fundo.
     public FaseSingle(String ref) {
@@ -298,6 +301,26 @@ public class FaseSingle extends JPanel implements ActionListener {
                 int y = 430; // Define a posição vertical (ajuste conforme necessário)
 
                 graficos.drawString(scoreText, x, y);
+
+                if(!gameOverHandled) {
+
+                    gameOverHandled = true;
+
+                    // Criando um Timer com atraso de 10 segundos
+                    Timer timer = new Timer(3200, new ActionListener() {
+                        @Override
+                        public void actionPerformed(ActionEvent e) {
+                            if (Container.frameAtual != null) {
+                                Container.frameAtual.fecharContainerAtual();
+                                Container.gameState = "MENU";
+                                new Container(1);
+                            }
+                        }
+                    });
+
+                    timer.setRepeats(false);
+                    timer.start();
+                }
             }
         }
 
@@ -310,7 +333,7 @@ public class FaseSingle extends JPanel implements ActionListener {
         if(!player1.isVisible())
             emJogo = false;
 
-        if(emJogo) {
+        if(emJogo && !youWin) {
 
             ArrayList<Tiro> tiros = player1.getTiros();
 
@@ -389,7 +412,7 @@ public class FaseSingle extends JPanel implements ActionListener {
                         y.update();
                     } else {
                         explosoes.remove(q);
-                        //q--;
+                        q--;
                     }
                 }
             }
@@ -426,9 +449,8 @@ public class FaseSingle extends JPanel implements ActionListener {
             }
 
             collisions();
+            repaint();
         }
-
-        repaint();
     }
 
     public void collisions()
@@ -653,7 +675,7 @@ public class FaseSingle extends JPanel implements ActionListener {
         });
         timerChefao.start();
 
-        timerInimigos2  = new Timer(45000, new ActionListener() {
+        timerInimigos2  = new Timer(48000, new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 inicializarInimigos2();
             }
