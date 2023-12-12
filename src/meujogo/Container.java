@@ -1,23 +1,35 @@
 package meujogo;
 import javax.swing.JFrame;
 import elements.Fase;
+import elements.FaseSingle;
+import elements.Menu;
 
-public class Container extends JFrame{
+public class Container extends JFrame {
+    public static final int WIDTH = 1024;
+    public static final int HEIGHT = 728;
 
-    public Container()
-    {
-        add(new Fase());
-        
-        setTitle("Cosmic Odyssey");
-        setSize(1024,728);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setLocationRelativeTo(null);
-        this.setResizable(false);
-        setVisible(true);
+    public static String gameState = "MENU";
+
+    public Container(int op) {   
+        if(op == 1) {
+            add(new Menu(this));
+        } else if (op == 2) {
+            add(new FaseSingle("res/pixel art _ Tumblr.gif"));
+        }
+        else
+        {
+            add(new Fase("res/pixel art _ Tumblr.gif"));
+        }
+
+		setTitle("Cosmic Odyssey: Luzes do Infinito");
+		setResizable(false);
+		setSize(WIDTH, HEIGHT);	
+		setLocationRelativeTo(null);
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+	    setVisible(true);
     }
 
     public static void main(String[] args){
-        new Container();
+        new Container(1);
     }
-    
 }

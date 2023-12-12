@@ -1,166 +1,219 @@
+//
+// Source code recreated from a .class file by IntelliJ IDEA
+// (powered by FernFlower decompiler)
+//
+
 package elements;
+
 import java.awt.Image;
 import java.awt.Rectangle;
 import java.awt.event.KeyEvent;
-import java.awt.event.MouseEvent;
-import javax.swing.ImageIcon;
+import java.awt.image.ImageObserver;
 import java.util.ArrayList;
+import javax.swing.ImageIcon;
 
 public class Player {
-    
-    private int x,y;
-    private int dx, dy;
+    private int x;
+    private int y;
+    private int dx;
+    private int dy;
     private Image imagem;
-    private int altura, largura;
-    private ArrayList <Tiro> tiros;
+    private int altura;
+    private int largura;
+    private ArrayList<Tiro> tiros;
     private static int VELOCIDADE = 5;
     private boolean isVisible;
+    private boolean explodido;
     private int vida;
     private int score;
+    private int p;
 
-    public Player()
-    {
-        this.x = 100;
-        this.y = 100;
-        isVisible = true;
+    public Player(int p) {
+        this.p = p;
+        switch (p) {
+            case 1:
+                this.x = 100;
+                this.y = 100;
+                ImageIcon referencia = new ImageIcon(this.getClass().getClassLoader().getResource("res/player1.png"));
+                this.imagem = referencia.getImage();
+                break;
+            case 2:
+                this.x = 100;
+                this.y = 300;
+                ImageIcon referencia2 = new ImageIcon(this.getClass().getClassLoader().getResource("res/player2.png"));
+                this.imagem = referencia2.getImage();
+        }
 
+        this.isVisible = true;
+        this.explodido = false;
         this.vida = 5;
-        score = 0;
-
-        tiros = new ArrayList<Tiro>();
-
-        ImageIcon referencia = new ImageIcon(getClass().getClassLoader().getResource("res/spaceship2.png"));
-        this.imagem = referencia.getImage();
-        this.altura = imagem.getHeight(null);
-        this.largura = imagem.getWidth(null);
+        this.score = 0;
+        this.tiros = new ArrayList();
+        this.altura = this.imagem.getHeight((ImageObserver)null);
+        this.largura = this.imagem.getWidth((ImageObserver)null);
     }
 
     public void setImagemvida() {
-		
-        
-        if (vida == 1) {
-			ImageIcon referencia = new ImageIcon(getClass().getClassLoader().getResource("res/spaceship2Hitmed.png"));
-			imagem = referencia.getImage();
-
-		}
-		else if (vida == 0) {
-			ImageIcon referencia = new ImageIcon(getClass().getClassLoader().getResource("res/spaceship2Hit.png"));
-			imagem = referencia.getImage();
-		}
-        else{
-            ImageIcon referencia = new ImageIcon(getClass().getClassLoader().getResource("res/spaceship2.png"));
+        ImageIcon referencia;
+        if (this.p == 1) {
+            if (this.vida == 1) {
+                referencia = new ImageIcon(this.getClass().getClassLoader().getResource("res/player1midDamage.png"));
+                this.imagem = referencia.getImage();
+            } else if (this.vida == 0) {
+                referencia = new ImageIcon(this.getClass().getClassLoader().getResource("res/player1lowDamage.png"));
+                this.imagem = referencia.getImage();
+            } else {
+                referencia = new ImageIcon(this.getClass().getClassLoader().getResource("res/player1.png"));
+                this.imagem = referencia.getImage();
+            }
+        } else if (this.vida == 1) {
+            referencia = new ImageIcon(this.getClass().getClassLoader().getResource("res/player2midDamage.png"));
+            this.imagem = referencia.getImage();
+        } else if (this.vida == 0) {
+            referencia = new ImageIcon(this.getClass().getClassLoader().getResource("res/player2lowDamage.png"));
+            this.imagem = referencia.getImage();
+        } else {
+            referencia = new ImageIcon(this.getClass().getClassLoader().getResource("res/player2.png"));
             this.imagem = referencia.getImage();
         }
 
-	}
-
-    public void update()
-    {
-        x += dx;
-        y += dy;
-
-        if (this.x < 6) {
-			x = 6;
-		}
-
-		if (this.x > 938) {
-			x = 938;
-		}
-
-		if (this.y < 60) {
-			y = 60;
-		}
-		if (this.y > 600) {
-			y = 600;
-		}
-
-        setImagemvida();
     }
 
-    public void tiroSimples()
-    {
-        this.tiros.add(new Tiro(x+largura, y+(altura/2)));
+    public void update() {
+        if (this.isVisible) {
+            this.x += this.dx;
+            this.y += this.dy;
+            if (this.x < 6) {
+                this.x = 6;
+            }
+
+            if (this.x > 938) {
+                this.x = 938;
+            }
+
+            if (this.y < 60) {
+                this.y = 60;
+            }
+
+            if (this.y > 600) {
+                this.y = 600;
+            }
+
+            this.setImagemvida();
+        }
+
     }
 
-    public void keyPressed(KeyEvent tecla)
-    {   
+    public void tiroSimples() {
+        this.tiros.add(new Tiro(this.x + this.largura, this.y + this.altura / 2));
+    }
+
+    public void keyPressed(KeyEvent tecla) {
         int codigo = tecla.getKeyCode();
+        if (this.p == 1) {
+            if (codigo == 87) {
+                this.dy = -VELOCIDADE;
+            }
 
-        if(codigo == KeyEvent.VK_W)
-        {
-            dy = -VELOCIDADE;
+            if (codigo == 83) {
+                this.dy = VELOCIDADE;
+            }
+
+            if (codigo == 65) {
+                this.dx = -VELOCIDADE;
+            }
+
+            if (codigo == 68) {
+                this.dx = VELOCIDADE;
+            }
+
+            if (codigo == 32 && this.tiros.size() < 10) {
+                this.tiroSimples();
+            }
+        } else if (this.p == 2) {
+            if (codigo == 38) {
+                this.dy = -VELOCIDADE;
+            }
+
+            if (codigo == 40) {
+                this.dy = VELOCIDADE;
+            }
+
+            if (codigo == 37) {
+                this.dx = -VELOCIDADE;
+            }
+
+            if (codigo == 39) {
+                this.dx = VELOCIDADE;
+            }
+
+            if (codigo == 44 && this.tiros.size() < 20) {
+                this.tiroSimples();
+            }
         }
 
-        if(codigo == KeyEvent.VK_S)
-        {
-            dy = VELOCIDADE;
-        }
-
-        if(codigo == KeyEvent.VK_A)
-        {
-            dx = -VELOCIDADE;
-        }
-
-        if(codigo == KeyEvent.VK_D)
-        {
-            dx = VELOCIDADE;
-        }
-        
     }
 
-    public void mousePressed(MouseEvent evento) {
-        if (evento.getButton() == MouseEvent.BUTTON1) {
-            tiroSimples();
-        }
-    }
-
-    public void keyReleased(KeyEvent tecla)
-    {   
+    public void keyReleased(KeyEvent tecla) {
         int codigo = tecla.getKeyCode();
+        if (this.p == 1) {
+            if (codigo == 87) {
+                this.dy = 0;
+            }
 
-        if(codigo == KeyEvent.VK_W)
-        {
-            dy = 0;
+            if (codigo == 83) {
+                this.dy = 0;
+            }
+
+            if (codigo == 65) {
+                this.dx = 0;
+            }
+
+            if (codigo == 68) {
+                this.dx = 0;
+            }
+        } else if (this.p == 2) {
+            if (codigo == 38) {
+                this.dy = 0;
+            }
+
+            if (codigo == 40) {
+                this.dy = 0;
+            }
+
+            if (codigo == 37) {
+                this.dx = 0;
+            }
+
+            if (codigo == 39) {
+                this.dx = 0;
+            }
         }
 
-        if(codigo == KeyEvent.VK_S)
-        {
-            dy = 0;
-        }
-
-        if(codigo == KeyEvent.VK_A)
-        {
-            dx = 0;
-        }
-
-        if(codigo == KeyEvent.VK_D)
-        {
-            dx = 0;
-        }
     }
 
     public int getX() {
-        return x;
+        return this.x;
     }
 
     public int getY() {
-        return y;
+        return this.y;
     }
 
     public Image getImagem() {
-        return imagem;
+        return this.imagem;
     }
 
     public ArrayList<Tiro> getTiros() {
-        return tiros;
+        return this.tiros;
     }
 
     public Rectangle getBounds() {
-		return new Rectangle(x, y, largura, altura);
-	}
+        return new Rectangle(this.x, this.y, this.largura, this.altura);
+    }
 
     public boolean isVisible() {
-        return isVisible;
+        return this.isVisible;
     }
 
     public void setVisible(boolean isVisible) {
@@ -168,7 +221,7 @@ public class Player {
     }
 
     public int getVida() {
-        return vida;
+        return this.vida;
     }
 
     public void setVida(int vida) {
@@ -176,20 +229,22 @@ public class Player {
     }
 
     public int getScore() {
-        return score;
+        return this.score;
     }
 
     public void setScore(int score) {
         this.score = score;
     }
 
-    public void somarScore()
-    {
-        this.score++;
+    public void somarScore() {
+        ++this.score;
     }
 
-    
+    public boolean getExplodido() {
+        return this.explodido;
+    }
 
-    
-
+    public void setExplodido(boolean explodido) {
+        this.explodido = explodido;
+    }
 }

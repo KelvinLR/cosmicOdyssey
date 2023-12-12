@@ -11,9 +11,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseAdapter;
 import java.awt.event.MouseListener;
-import java.io.File;
 import java.io.IOException;
 import javax.swing.ImageIcon;
 import javax.swing.JPanel;
@@ -22,47 +20,49 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Fase extends JPanel implements ActionListener, MouseListener {
+public class Fase extends JPanel implements ActionListener {
 
     private Image fundo;
     private Player player1;
+    private Player player2;
     private Timer timer;
-    private ArrayList <Inimigo1> inimigos1;
-    private ArrayList <Inimigo2> inimigos2;
+    private ArrayList<InimigoComum> inimigosComuns;
+    private ArrayList<InimigoAtirador> inimigosAtiradores;
+    private Chefao chefao;
     private List<Vida> vidas;
     private ArrayList <Explosao> explosoes;
-    private boolean emJogo, emExplosao;
+    private boolean emJogo, emExplosao, youWin;
     private int powerUpVida = 0;
     private Font minecraftFont;
+    private static int numeroInimigos = 50;
 
-    private static int numeroInimigos = 20;
-
-    public Fase()
-    {
+    // Construtor da classe Fase com a referência da tela de fundo.
+    public Fase(String ref) {
         setFocusable(true);
         setDoubleBuffered(true);
         emJogo = true;
+        youWin = false;
 
-        ImageIcon referencia = new ImageIcon(getClass().getClassLoader().getResource("res/pixel art _ Tumblr.gif"));
+        ImageIcon referencia = new ImageIcon(getClass().getClassLoader().getResource(ref));
         fundo = referencia.getImage();
-        //ImageIcon gamerOver = new ImageIcon(getClass().getClassLoader().getResource("res/fimdejogo.png"));
-        //this.gameOver = referencia.getImage();
 
-        player1 = new Player();
+        player1 = new Player(1);
+        player2 = new Player(2);
 
         powerUpVida = 0;
         vidas = new ArrayList<Vida>();
 
         addKeyListener(new TecladoAdapter());
-        addMouseListener(new MouseAdaptado());
 
         waitForSeconds();
         Timer timer = new Timer(5,this);
         timer.start();
 
-        inicializaInimigos();
-        this.explosoes = new ArrayList<>();
-        minecraftFont = carregarFonte();
+        inicializarElementos();
+        inicializarInimigos1();
+        //INICIALIZAR OS INIMIGOS ATIRADORES COM ARRAY VAZIO
+        inimigosAtiradores = new ArrayList<InimigoAtirador>();
+        inicializarChefao();
     }
 
     public Font carregarFonte() {
@@ -82,112 +82,242 @@ public class Fase extends JPanel implements ActionListener, MouseListener {
         return new Font("Arial", Font.PLAIN, 18);
     }
 
-
-    public void inicializaInimigos()
+    public void inicializarInimigos1()
     {
-        inimigos1 = new ArrayList<Inimigo1>();
+        inimigosComuns = new ArrayList<InimigoComum>();
         for (int i = 0; i < numeroInimigos; i++) {
-			int x = (int) ((Math.random() * 8000) + 1024);
-			int y = (int) ((Math.random() * 580) + 40);
-            inimigos1.add(new Inimigo1(x, y));
-		}
+            int x = (int) ((Math.random() * 8000) + 1024);
+            int y = (int) ((Math.random() * 580) + 40);
+            inimigosComuns.add(new InimigoComum(x, y));
+        }
+    }
 
-        inimigos2 = new ArrayList<Inimigo2>();
+    public void inicializarInimigos2()
+    {
         for (int i = 0; i < numeroInimigos; i++) {
-			int x = (int) ((Math.random() * 12000) + 1024);
-			int y = (int) ((Math.random() * 580) + 40);
-            inimigos2.add(new Inimigo2(x, y));
-		}
+            int x = (int) ((Math.random() * 8000) + 1024);
+            int y = (int) ((Math.random() * 580) + 40);
+            inimigosAtiradores.add(new InimigoAtirador(x, y));
+        }
+    }
 
+    public void inicializarChefao()
+    {
+        chefao = new Chefao(1024, 250);
+        chefao.setVisivel(false);
+    }
+
+    public void inicializarElementos()
+    {
+        this.explosoes = new ArrayList<Explosao>();
+        minecraftFont = carregarFonte();
+    }
+
+    public void arrayShot(Graphics g){
+        ArrayList<Tiro> tiros = player1.getTiros();
+        ArrayList<Tiro> tiros2 = player2.getTiros();
+        Graphics2D graficos = (Graphics2D) g;
+        for (int i = 0; i < tiros.size(); i++) {
+            Tiro t = tiros.get(i);
+            graficos.drawImage(t.getImagem(), t.getX(), t.getY(), this);
+        }
+
+        for (int i = 0; i < tiros2.size(); i++) {
+            Tiro t = tiros2.get(i);
+            graficos.drawImage(t.getImagem(), t.getX(), t.getY(), this);
+        }
     }
 
     public void paint(Graphics g) {
         Graphics2D graficos = (Graphics2D) g;
 
-        if (emJogo) {
-            graficos.drawImage(fundo, 0, 0, null);
-            graficos.drawImage(player1.getImagem(), player1.getX(), player1.getY(), this);
+        if(youWin) {
+            ImageIcon gamerOver = new ImageIcon(getClass().getClassLoader().getResource("res/youwin.png"));
+            graficos.drawImage(gamerOver.getImage(), 0, 0, null);
 
-            ArrayList<Tiro> tiros = player1.getTiros();
-
-            //Tiros do Player
-            for (int i = 0; i < tiros.size(); i++) {
-                Tiro t = tiros.get(i);
-                    graficos.drawImage(t.getImagem(), t.getX(), t.getY(), this);
-            }
-            //////////////////////////////////////////////////////////////////////////////
-
-            //Inimigos 1
-            for (int i = 0; i < inimigos1.size(); i++) {
-                Inimigo1 in = inimigos1.get(i);
-                if (in.getBounds().intersects(0, 0, 1024, 728)) {
-                    graficos.drawImage(in.getImagem(), in.getX(), in.getY(), this);
-                }
-            }
-            //////////////////////////////////////////////////////////////////////////////
-
-            //Inimigos 2 e seus Tiros
-            for (int i = 0; i < inimigos2.size(); i++) {
-                Inimigo2 in = inimigos2.get(i);
-                if (in.getBounds().intersects(0, 0, 1024, 728)) {
-                    graficos.drawImage(in.getImagem(), in.getX(), in.getY(), this);
-                }
-            }
-
-            for (int i = 0; i < inimigos2.size(); i++) {
-                List<Tiro_Inimigo2> tirosInimigo = inimigos2.get(i).getTiroInimigo();
-                for (int o = 0; o < tirosInimigo.size(); o++) {
-                    Tiro_Inimigo2 m = (Tiro_Inimigo2) tirosInimigo.get(o);
-                    if (m.getBounds().intersects(0, 0, 1024, 728)) {
-                        graficos.drawImage(m.getImagem(), m.getX(), m.getY(), this);
-                    }
-                }
-            }
-            //////////////////////////////////////////////////////////////////////////////
-
-            //Explosões
-            for (int i = 0; i < explosoes.size(); i++) {
-                Explosao ex = explosoes.get(i);
-                graficos.drawImage(ex.getImagem(), ex.getX(), ex.getY(), this);
-            }
-            /////////////////////////////////////////////////////////////////////////////
-
-            //PowerUp Vida
-            for (int k = 0; k < vidas.size(); k++) {
-                Vida on = vidas.get(k);
-
-                graficos.drawImage(on.getVida(), on.getX(), on.getY(), null);
-            }
-            /////////////////////////////////////////////////////////////////////////////////
-
-            //Status da vida
-            int a = 10;
-            for (int j = 0; j < player1.getVida(); j++) {
-                ImageIcon vida = new ImageIcon(getClass().getClassLoader().getResource("res/Vida.png"));
-                graficos.drawImage(vida.getImage(), a, 10, null);
-                a += 30;
-            }
-            /////////////////////////////////////////////////////////////////////////////////////
-
-            //Score
             graficos.setColor(Color.white);
+            minecraftFont = minecraftFont.deriveFont(Font.PLAIN, 25);
             graficos.setFont(minecraftFont);
 
-            String scoreText = "SCORE: " + player1.getScore();
+            int scoreTotal = player1.getScore() + player2.getScore();
+
+            String scoreText = "SCORE: " + scoreTotal;
             int textWidth = graficos.getFontMetrics().stringWidth(scoreText);
 
             int screenWidth = getWidth();
             int screenHeight = getHeight();
 
             int x = (screenWidth - textWidth) / 2; // Centraliza horizontalmente
-            int y = 30; // Define a posição vertical (ajuste conforme necessário)
+            int y = 510; // Define a posição vertical (ajuste conforme necessário)
 
             graficos.drawString(scoreText, x, y);
         }
-        else
-        {
-            ImageIcon gamerOver = new ImageIcon(getClass().getClassLoader().getResource("res/fimdejogo.png"));
-            graficos.drawImage(gamerOver.getImage(), 0, 0, null);
+        else{
+            if (emJogo) {
+                graficos.drawImage(fundo, 0, 0, null);
+
+                if (player1.isVisible())
+                    graficos.drawImage(player1.getImagem(), player1.getX(), player1.getY(), this);
+
+                if (player2.isVisible())
+                    graficos.drawImage(player2.getImagem(), player2.getX(), player2.getY(), this);
+
+                arrayShot(g);
+
+                //Inimigos 1
+                for (int i = 0; i < inimigosComuns.size(); i++) {
+                    InimigoComum in = inimigosComuns.get(i);
+                    if (in.getBounds().intersects(0, 0, 1024, 728)) {
+                        graficos.drawImage(in.getImagem(), in.getX(), in.getY(), this);
+                    }
+                }
+                //////////////////////////////////////////////////////////////////////////////
+
+                //Inimigos 2 e seus Tiros
+                for (int i = 0; i < inimigosAtiradores.size(); i++) {
+                    InimigoAtirador in = inimigosAtiradores.get(i);
+                    if (in.getBounds().intersects(0, 0, 1024, 728)) {
+                        graficos.drawImage(in.getImagem(), in.getX(), in.getY(), this);
+                    }
+                }
+
+                for (int i = 0; i < inimigosAtiradores.size(); i++) {
+                    List<TiroInimigo> tirosInimigo = inimigosAtiradores.get(i).getTirosInimigo();
+                    for (int o = 0; o < tirosInimigo.size(); o++) {
+                        TiroInimigo m = (TiroInimigo) tirosInimigo.get(o);
+                        if (m.getBounds().intersects(0, 0, 1024, 728)) {
+                            graficos.drawImage(m.getImagem(), m.getX(), m.getY(), this);
+                        }
+                    }
+                }
+                //////////////////////////////////////////////////////////////////////////////
+
+                //Explosões
+                for (int i = 0; i < explosoes.size(); i++) {
+                    Explosao ex = explosoes.get(i);
+                    graficos.drawImage(ex.getImagem(), ex.getX(), ex.getY(), this);
+                }
+                /////////////////////////////////////////////////////////////////////////////
+
+                //PowerUp Vida
+                for (int k = 0; k < vidas.size(); k++) {
+                    Vida on = vidas.get(k);
+                    graficos.drawImage(on.getImagem(), on.getX(), on.getY(), null);
+                }
+                /////////////////////////////////////////////////////////////////////////////////
+
+                //Status da vida
+
+                graficos.setColor(Color.white);
+                minecraftFont = minecraftFont.deriveFont(Font.PLAIN, 18);
+                graficos.setFont(minecraftFont);
+
+                String p1 = "P1:";
+                String p2 = "P2:";
+
+                graficos.drawString(p1, 11, 30);
+                graficos.drawString(p2, 11, 60);
+
+                int x1 = 40;
+                for (int j = 0; j < player1.getVida(); j++) {
+                    ImageIcon vida = new ImageIcon(getClass().getClassLoader().getResource("res/Vida.png"));
+                    graficos.drawImage(vida.getImage(), x1, 10, null);
+                    x1 += 30;
+                }
+
+                int x2 = 40;
+                for (int j = 0; j < player2.getVida(); j++) {
+                    ImageIcon vida = new ImageIcon(getClass().getClassLoader().getResource("res/Vida.png"));
+                    graficos.drawImage(vida.getImage(), x2, 40, null);
+                    x2 += 30;
+                }
+                /////////////////////////////////////////////////////////////////////////////////////
+
+                //Chefao e seus tiros
+                if (chefao.isVisivel()) {
+                    chefao.load();
+                    graficos.drawImage(chefao.getImagem(), chefao.getX(), chefao.getY(), this);
+
+                    if (chefao.getVida() > 0 && chefao.getVida() < 30) {
+                        ImageIcon vidaBoss = new ImageIcon(getClass().getClassLoader().getResource("res/VidaBoss.png"));
+                        graficos.drawImage(vidaBoss.getImage(), 250, 650, null);
+                    }
+                    if (chefao.getVida() > 29 && chefao.getVida() < 50) {
+                        ImageIcon vidaBoss = new ImageIcon(getClass().getClassLoader().getResource("res/VidaBoss1Hit.png"));
+                        graficos.drawImage(vidaBoss.getImage(), 250, 650, null);
+                    }
+                    if (chefao.getVida() > 49 && chefao.getVida() < 80) {
+                        ImageIcon vidaBoss = new ImageIcon(getClass().getClassLoader().getResource("res/VidaBoss2Hit.png"));
+                        graficos.drawImage(vidaBoss.getImage(), 250, 650, null);
+                    }
+                    if (chefao.getVida() > 79 && chefao.getVida() < 100) {
+                        ImageIcon vidaBoss = new ImageIcon(getClass().getClassLoader().getResource("res/VidaBoss3Hit.png"));
+                        graficos.drawImage(vidaBoss.getImage(), 250, 650, null);
+                    }
+
+                    if (chefao.getVida() > 99 && chefao.getVida() < 120) {
+                        ImageIcon vidaBoss = new ImageIcon(getClass().getClassLoader().getResource("res/VidaBoss4Hit.png"));
+                        graficos.drawImage(vidaBoss.getImage(), 250, 650, null);
+                    }
+
+                    if (chefao.getVida() > 119) {
+                        ImageIcon vidaBoss = new ImageIcon(getClass().getClassLoader().getResource("res/VidaBoss5Hit.png"));
+                        graficos.drawImage(vidaBoss.getImage(), 250, 650, null);
+                    }
+                } else if (!chefao.getExplodido()) {
+                    ImageIcon explosaoChefe = new ImageIcon(getClass().getClassLoader().getResource("res/explosion.gif"));
+                    graficos.drawImage(explosaoChefe.getImage(), chefao.getX(), chefao.getY(), null);
+                    chefao.setExplodido(true);
+                }
+
+                List<TiroChefao> tiroBoss = chefao.getTiroBoss();
+                for (int o = 0; o < tiroBoss.size(); o++) {
+                    TiroChefao m = tiroBoss.get(o);
+                    if (chefao.isVisivel()) {
+                        graficos.drawImage(m.getImagem(), m.getX(), m.getY(), this);
+                    }
+                }
+                ////////////////////////////////////////////////////////////////////////////////////////////
+
+                //Score
+                graficos.setColor(Color.white);
+                minecraftFont = minecraftFont.deriveFont(Font.BOLD, 18);
+                graficos.setFont(minecraftFont);
+
+                int scoreTotal = player1.getScore() + player2.getScore();
+
+                String scoreText = "SCORE: " + scoreTotal;
+                int textWidth = graficos.getFontMetrics().stringWidth(scoreText);
+
+                int screenWidth = getWidth();
+                int screenHeight = getHeight();
+
+                int x = (screenWidth - textWidth) / 2; // Centraliza horizontalmente
+                int y = 30; // Define a posição vertical (ajuste conforme necessário)
+
+                graficos.drawString(scoreText, x, y);
+                ///////////////////////////////////////////////////////////////////////////////////////
+            } else {
+                ImageIcon gamerOver = new ImageIcon(getClass().getClassLoader().getResource("res/fimdejogo.png"));
+                graficos.drawImage(gamerOver.getImage(), 0, 0, null);
+
+                graficos.setColor(Color.white);
+                minecraftFont = minecraftFont.deriveFont(Font.PLAIN, 25);
+                graficos.setFont(minecraftFont);
+
+                int scoreTotal = player1.getScore() + player2.getScore();
+
+                String scoreText = "SCORE: " + scoreTotal;
+                int textWidth = graficos.getFontMetrics().stringWidth(scoreText);
+
+                int screenWidth = getWidth();
+                int screenHeight = getHeight();
+
+                int x = (screenWidth - textWidth) / 2; // Centraliza horizontalmente
+                int y = 430; // Define a posição vertical (ajuste conforme necessário)
+
+                graficos.drawString(scoreText, x, y);
+            }
         }
 
         g.dispose();
@@ -196,209 +326,539 @@ public class Fase extends JPanel implements ActionListener, MouseListener {
     @Override
     public void actionPerformed(ActionEvent e) {
 
-        ArrayList<Tiro> tiros = player1.getTiros();
-        player1.update();
-        
-        for(int i=0 ; i < tiros.size() ; i++)
-        {
-            if(tiros.get(i).isVisible()){
-                tiros.get(i).update();
-            }
-            else{
-                tiros.remove(i);
-                i--;
-            }
-        }
+        if(!player1.isVisible() && !player2.isVisible())
+            emJogo = false;
 
-        for(int i=0 ; i < inimigos1.size() ; i++)
-        {
-            Inimigo1 in = inimigos1.get(i);
+        if(emJogo) {
 
-            if(in.isVisible()){
-                in.update();
+            ArrayList<Tiro> tiros = player1.getTiros();
+            ArrayList<Tiro> tiros2 = player2.getTiros();
+
+            if (player1.isVisible())
+                player1.update();
+            else if(!player1.getExplodido())
+            {
+                player1.setExplodido(true);
+                explosoes.add(new Explosao(player1.getX(), player1.getY()));
             }
-            else{
-                inimigos1.remove(i);
-                i--;
-                explosoes.add(new Explosao(in.getX(), in.getY()));
 
-                powerUpVida++;
-                if (powerUpVida == 5) {
-					vidas.add(new Vida(in.getX(), in.getY()));
-					powerUpVida = 0;
-				}
+            if (player2.isVisible())
+                player2.update();
+            else if(!player2.getExplodido())
+            {
+                player2.setExplodido(true);
+                explosoes.add(new Explosao(player2.getX(), player2.getY()));
             }
-        }
 
-        if(inimigos2 != null && !inimigos2.isEmpty()) {
-            for (int i = 0; i < inimigos2.size(); i++) {
-                Inimigo2 in = inimigos2.get(i);
+            for (int i = 0; i < tiros.size(); i++) {
+                if (tiros.get(i).isVisible()) {
+                    tiros.get(i).update();
+                } else {
+                    tiros.remove(i);
+                    i--;
+                }
+            }
+
+            for (int i = 0; i < tiros2.size(); i++) {
+                if (tiros2.get(i).isVisible()) {
+                    tiros2.get(i).update();
+                } else {
+                    tiros2.remove(i);
+                    i--;
+                }
+            }
+
+
+            for (int i = 0; i < inimigosComuns.size(); i++) {
+                InimigoComum in = inimigosComuns.get(i);
 
                 if (in.isVisible()) {
                     in.update();
                 } else {
-                    inimigos2.remove(i);
+                    inimigosComuns.remove(i);
                     i--;
                     explosoes.add(new Explosao(in.getX(), in.getY()));
-                }
-            }
-        }
-
-        if(inimigos2 != null && !inimigos2.isEmpty()) {
-            for (int q = 0; q < inimigos2.size(); q++) {
-                List<Tiro_Inimigo2> tiroInimigos = inimigos2.get(q).getTiroInimigo();
-                for (int o = 0; o < tiroInimigos.size(); o++) {
-                    Tiro_Inimigo2 m = (Tiro_Inimigo2) tiroInimigos.get(o);
-                    if (m.isVisible()) {
-                        m.update();
-                    } else {
-                        tiroInimigos.remove(o);
-                        o--;
+                    powerUpVida++;
+                    if (powerUpVida == 5) {
+                        vidas.add(new Vida(in.getX(), in.getY()));
+                        powerUpVida = 0;
                     }
-
                 }
             }
-        }
 
-        if(explosoes != null && !explosoes.isEmpty()) {
-            for (int q = 0; q < explosoes.size(); q++) {
-                Explosao y = explosoes.get(q);
-                if (y.isVisivel()) {
-                    y.update();
+            for (int i = 0; i < inimigosAtiradores.size(); i++) {
+                InimigoAtirador in = inimigosAtiradores.get(i);
+
+                if (in.isVisible()) {
+                    in.update();
                 } else {
-                    explosoes.remove(q);
-                    q--;
+                    inimigosAtiradores.remove(i);
+                    i--;
+                    explosoes.add(new Explosao(in.getX(), in.getY()));
+                    powerUpVida++;
+                    if (powerUpVida == 5) {
+                        vidas.add(new Vida(in.getX(), in.getY()));
+                        powerUpVida = 0;
+                    }
                 }
             }
-        }
 
-        for (int p = 0; p < vidas.size(); p++) {
-			Vida on = vidas.get(p);
 
-                if(on.isVisivel())
+            if (inimigosAtiradores != null && !inimigosAtiradores.isEmpty()) {
+                for (int q = 0; q < inimigosAtiradores.size(); q++) {
+                    List<TiroInimigo> tiroInimigos = inimigosAtiradores.get(q).getTirosInimigo();
+                    for (int o = 0; o < tiroInimigos.size(); o++) {
+                        TiroInimigo m = (TiroInimigo) tiroInimigos.get(o);
+                        if (m.isVisible()) {
+                            m.update();
+                        } else {
+                            tiroInimigos.remove(o);
+                            o--;
+                        }
+
+                    }
+                }
+            }
+
+            if (explosoes != null && !explosoes.isEmpty()) {   // "!explosoes.isEmpty()" equivale a "explosoes.size() != 0"
+                for (int q = 0; q < explosoes.size(); q++) {
+                    Explosao y = explosoes.get(q);
+                    if (y.isVisible()) {
+                        y.update();
+                    } else {
+                        explosoes.remove(q);
+                        //q--;
+                    }
+                }
+            }
+
+            for (int p = 0; p < vidas.size(); p++) {
+                Vida on = vidas.get(p);
+
+                if (on.isVisible())
                     on.update();
                 else {
                     vidas.remove(p);
                     p--;
                 }
-		}
+            }
 
-        checarColisoes();
+            if(player1.getVida() == player2.getVida()) {
+                if (chefao.isVisivel()) {
+                    chefao.update();
+                    if (chefao.getTiroBoss().isEmpty()) {
+                        chefao.tiroBoss();
+                        chefao.tiroBoss();
+                    }
+                }
+            }
+            else if(player1.getVida() < player2.getVida()){
+                if(!player1.isVisible()) {
+                    if (chefao.isVisivel()) {
+                        chefao.update(player2.getX(), player2.getY());
+                        if (chefao.getTiroBoss().isEmpty()) {
+                            chefao.tiroBoss();
+                            chefao.tiroBoss();
+                        }
+                    }
+                }
+                else{
+                    if (chefao.isVisivel()) {
+                        chefao.update(player1.getX(), player1.getY());
+                        if (chefao.getTiroBoss().isEmpty()) {
+                            chefao.tiroBoss();
+                            chefao.tiroBoss();
+                        }
+                    }
+                }
+            }
+            else{
+                if(!player2.isVisible()) {
+                    if (chefao.isVisivel()) {
+                        chefao.update(player1.getX(), player1.getY());
+                        if (chefao.getTiroBoss().isEmpty()) {
+                            chefao.tiroBoss();
+                            chefao.tiroBoss();
+                        }
+                    }
+                }
+                else{
+                    if (chefao.isVisivel()) {
+                        chefao.update(player2.getX(), player2.getY());
+                        if (chefao.getTiroBoss().isEmpty()) {
+                            chefao.tiroBoss();
+                            chefao.tiroBoss();
+                        }
+                    }
+                }
+            }
+
+            List<TiroChefao> tiroBoss = chefao.getTiroBoss();
+
+            if(!tiroBoss.isEmpty()) {
+                TiroChefao tempTiro1 = tiroBoss.get(0);
+
+                if (player1.isVisible() && player2.isVisible()) {
+                    if (tempTiro1 != null) {
+                        if (tempTiro1.isVisivel()) {
+                            tempTiro1.update(player1.getX(), player1.getY());
+                        } else
+                            tiroBoss.remove(0);
+                    }
+
+                    if (tiroBoss.size() == 2) {
+                        TiroChefao tempTiro2 = tiroBoss.get(1);
+                        if (tempTiro2 != null) {
+                            if (tempTiro2.isVisivel()) {
+                                tempTiro2.update(player2.getX(), player2.getY());
+                            } else
+                                tiroBoss.remove(1);
+                        }
+                    }
+                } else if (player1.isVisible()) {
+                    if (tempTiro1 != null) {
+                        if (tempTiro1.isVisivel()) {
+                            tempTiro1.update(player1.getX(), player1.getY());
+                        } else
+                            tiroBoss.remove(0);
+                    }
+
+                    if (tiroBoss.size() == 2) {
+                        TiroChefao tempTiro2 = tiroBoss.get(1);
+                        if (tempTiro2 != null) {
+                            if (tempTiro2.isVisivel()) {
+                                tempTiro2.update(player1.getX(), player1.getY());
+                            } else
+                                tiroBoss.remove(1);
+                        }
+                    }
+
+                }
+                else{
+                    if (tempTiro1 != null) {
+                        if (tempTiro1.isVisivel()) {
+                            tempTiro1.update(player2.getX(), player2.getY());
+                        } else
+                            tiroBoss.remove(0);
+                    }
+
+                    if (tiroBoss.size() == 2) {
+                        TiroChefao tempTiro2 = tiroBoss.get(1);
+                        if (tempTiro2 != null) {
+                            if (tempTiro2.isVisivel()) {
+                                tempTiro2.update(player2.getX(), player2.getY());
+                            } else
+                                tiroBoss.remove(1);
+                        }
+                    }
+                }
+            }
+
+            collisions();
+        }
 
         repaint();
     }
 
-    public void checarColisoes()
+    public void collisions()
     {
         Rectangle formaNave = player1.getBounds();
+        Rectangle formaNave2 = player2.getBounds();
         Rectangle formaInimigo1;
         Rectangle formaInimigo2;
         Rectangle formaTiroInimigo;
         Rectangle formaTiro;
-        
-        //Inimigo1 e player
-        for(int i=0 ; i<inimigos1.size() ; i++)
-        {
-            formaInimigo1 = inimigos1.get(i).getBounds();
+        Rectangle formaTiro2;
+        Rectangle formaChefao;
+        Rectangle formaTiroChefao;
 
-            if(formaNave.intersects(formaInimigo1))
-            {
-                player1.somarScore();
+        //Inimigo1, player1 e player2
+        if(player1.isVisible()) {
+            for (int i = 0; i < inimigosComuns.size(); i++) {
+                formaInimigo1 = inimigosComuns.get(i).getBounds();
 
-                int a = player1.getVida();
+                if (formaNave.intersects(formaInimigo1)) {
+                    player1.somarScore();
 
-                if (a == 0) {
-                    player1.setVisible(false);
-                    emJogo = false;
-                } else {
-                    player1.setVida(a - 1);
-                    inimigos1.get(i).setVisible(false);
-                    break;
-                }
-            }
-        }
+                    int a = player1.getVida();
 
-        //Inimigo2 & SeusTiros e player
-        for(int i=0 ; i<inimigos2.size() ; i++)
-        {
-            formaInimigo2 = inimigos2.get(i).getBounds();
-            Inimigo2 tempInimigo2 = inimigos2.get(i);
-            int a = player1.getVida();
-
-            if(formaNave.intersects(formaInimigo2))
-            {
-                player1.somarScore();
-
-                if (a == 0) {
-                    player1.setVisible(false);
-                    emJogo = false;
-                } else {
-                    player1.setVida(a - 1);
-                    tempInimigo2.setVisivel(false);
-                    break;
-                }
-            }
-
-            ArrayList<Tiro_Inimigo2> tirosInimigo = tempInimigo2.getTiroInimigo();
-
-            for(int j=0 ; j<tirosInimigo.size() ; j++)
-            {
-                Tiro_Inimigo2 tempTiroInimigo = tirosInimigo.get(j);
-                formaTiroInimigo = tempTiroInimigo.getBounds();
-
-                if(formaNave.intersects(formaTiroInimigo))
-                {
                     if (a == 0) {
-                    player1.setVisible(false);
-                    emJogo = false;
+                        player1.setVisible(false);
+                        break;
                     } else {
                         player1.setVida(a - 1);
-                        tempTiroInimigo.setVisivel(false);
+                        inimigosComuns.get(i).setVisible(false);
                         break;
                     }
                 }
             }
         }
 
+        if(player2.isVisible()) {
+            for (int i = 0; i < inimigosComuns.size(); i++) {
+                formaInimigo1 = inimigosComuns.get(i).getBounds();
+
+                if (formaNave2.intersects(formaInimigo1)) {
+                    player2.somarScore();
+
+                    int a = player2.getVida();
+
+                    if (a == 0) {
+                        player2.setVisible(false);
+                        break;
+                    } else {
+                        player2.setVida(a - 1);
+                        inimigosComuns.get(i).setVisible(false);
+                    }
+                }
+            }
+        }
+
+        //Inimigo2 & SeusTiros, player1 e player2
+        if(player1.isVisible()) {
+            for (int i = 0; i < inimigosAtiradores.size(); i++) {
+                formaInimigo2 = inimigosAtiradores.get(i).getBounds();
+                InimigoAtirador tempInimigo2 = inimigosAtiradores.get(i);
+                int a = player1.getVida();
+
+                if (formaNave.intersects(formaInimigo2)) {
+                    player1.somarScore();
+
+                    if (a == 0) {
+                        player1.setVisible(false);
+                        break;
+                    } else {
+                        player1.setVida(a - 1);
+                        tempInimigo2.setVisible(false);
+                    }
+                }
+
+                ArrayList<TiroInimigo> tirosInimigo = tempInimigo2.getTirosInimigo();
+
+                for (int j = 0; j < tirosInimigo.size(); j++) {
+                    TiroInimigo tempTiroInimigo = tirosInimigo.get(j);
+                    formaTiroInimigo = tempTiroInimigo.getBounds();
+
+                    if (formaNave.intersects(formaTiroInimigo)) {
+                        if (a == 0) {
+                            player1.setVisible(false);
+                            break;
+                        } else {
+                            player1.setVida(a - 1);
+                            tempTiroInimigo.setVisible(false);
+                        }
+                    }
+                }
+            }
+        }
+
+        if(player2.isVisible()) {
+            for (int i = 0; i < inimigosAtiradores.size(); i++) {
+                formaInimigo2 = inimigosAtiradores.get(i).getBounds();
+                InimigoAtirador tempInimigo2 = inimigosAtiradores.get(i);
+                int a = player2.getVida();
+
+                if (formaNave2.intersects(formaInimigo2)) {
+                    player2.somarScore();
+
+                    if (a == 0) {
+                        player2.setVisible(false);
+                        break;
+                    } else {
+                        player2.setVida(a - 1);
+                        tempInimigo2.setVisible(false);
+                    }
+                }
+
+                ArrayList<TiroInimigo> tirosInimigo = tempInimigo2.getTirosInimigo();
+
+                for (int j = 0; j < tirosInimigo.size(); j++) {
+                    TiroInimigo tempTiroInimigo = tirosInimigo.get(j);
+                    formaTiroInimigo = tempTiroInimigo.getBounds();
+
+                    if (formaNave2.intersects(formaTiroInimigo)) {
+                        if (a == 0) {
+                            player2.setVisible(false);
+                            break;
+                        } else {
+                            player2.setVida(a - 1);
+                            tempTiroInimigo.setVisible(false);
+                        }
+                    }
+                }
+            }
+        }
+
+        //Chefao & Seus Tiros, player1 e player2
+        Chefao tempchefao = chefao;
+        formaChefao = tempchefao.getBounds();
+
+        if(player1.isVisible()) {
+            if (formaNave.intersects(formaChefao)) {
+                player1.setVida(player1.getVida() - 1);
+                if (player1.getVida() < 0) {
+                    player1.setVisible(false);
+                }
+            }
+        }
+
+        if(player2.isVisible()) {
+            if (formaNave2.intersects(formaChefao)) {
+                player2.setVida(player2.getVida() - 1);
+                if (player2.getVida() < 0) {
+                    player2.setVisible(false);
+                }
+            }
+        }
+
+        List<TiroChefao> tirosChefao = chefao.getTiroBoss();
+
+        for(int i=0 ; i<tirosChefao.size() ; i++)
+        {
+            TiroChefao tempTiroChefao = tirosChefao.get(i);
+            formaTiroChefao = tempTiroChefao.getBounds();
+
+            if(player1.isVisible()) {
+                if (formaNave.intersects(formaTiroChefao)) {
+                    if (player1.getVida() == 0) {
+                        player1.setVisible(false);
+                        break;
+                    } else if (player1.getVida() < 2) {
+                        player1.setVida(0);
+                        tempTiroChefao.setVisivel(false);
+                    } else {
+                        player1.setVida(player1.getVida() - 2);
+                        tempTiroChefao.setVisivel(false);
+                    }
+                }
+            }
+
+            if(player2.isVisible()) {
+                if (formaNave2.intersects(formaTiroChefao)) {
+                    if (player2.getVida() == 0) {
+                        player2.setVisible(false);
+                        break;
+                    } else if (player2.getVida() < 2) {
+                        player2.setVida(0);
+                        tempTiroChefao.setVisivel(false);
+                    } else {
+                        player2.setVida(player2.getVida() - 2);
+                        tempTiroChefao.setVisivel(false);
+                    }
+                }
+            }
+        }
+
+        // Tiro player e Inimigos
         List<Tiro> tiros = player1.getTiros();
+        List<Tiro> tiros2 = player2.getTiros();
 
-		// Tiro player e Inimigos
-		for (int i = 0; i < tiros.size(); i++) {
-			Tiro temptiro = tiros.get(i);
-			formaTiro = temptiro.getBounds();
+        for (int i = 0; i < tiros.size(); i++) {
+            Tiro temptiro = tiros.get(i);
+            formaTiro = temptiro.getBounds();
 
-			for (int j = 0; j < inimigos1.size(); j++) {
-				Inimigo1 tempRedUfo = inimigos1.get(j);
-				formaInimigo1 = tempRedUfo.getBounds();
+            for (int j = 0; j < inimigosComuns.size(); j++) {
+                InimigoComum tempRedUfo = inimigosComuns.get(j);
+                formaInimigo1 = tempRedUfo.getBounds();
 
-				if (formaTiro.intersects(formaInimigo1)) {
+                if (formaTiro.intersects(formaInimigo1)) {
                     player1.somarScore();
-					//ImageIcon referencia2 = new ImageIcon("res\\explosion1.gif");
-					// explosion = referencia2.getImage();
-					//emExplosao = true;
-					tempRedUfo.setVisible(false);
-					temptiro.setVisible(false);
+                    tempRedUfo.setVisible(false);
+                    temptiro.setVisible(false);
                     break;
-				}
+                }
 
-			}
+            }
 
-			for (int j = 0; j < inimigos2.size(); j++) {
-				Inimigo2 tempGreenFire = inimigos2.get(j);
-				formaInimigo2 = tempGreenFire.getBounds();
+            for (int j = 0; j < inimigosAtiradores.size(); j++) {
+                InimigoAtirador tempGreenFire = inimigosAtiradores.get(j);
+                formaInimigo2 = tempGreenFire.getBounds();
 
-				if (formaTiro.intersects(formaInimigo2)) {
+                if (formaTiro.intersects(formaInimigo2)) {
                     player1.somarScore();
-					//ImageIcon referencia2 = new ImageIcon("res\\explosion1.gif");
-					// explosion = referencia2.getImage();
-					//emExplosao = true;
-					tempGreenFire.setVisivel(false);
-					temptiro.setVisible(false);
+                    tempGreenFire.setVisible(false);
+                    temptiro.setVisible(false);
                     break;
-				}
+                }
+            }
 
-			}
+            if (formaTiro.intersects(formaChefao)) {
+                chefao.setHit(true);
+                int a = tempchefao.getVida();
+                if (a < 120) {
+                    temptiro.setVisible(false);
+                    tempchefao.setVida(a + 1);
+                }
+                if (a > 119) {
+                    tempchefao.setVisivel(false);
+                    temptiro.setVisible(false);
+                    youWin = true;
+                }
+            }
 
+            for(int j=0 ; j<tirosChefao.size() ; j++) {
+                TiroChefao tempTiroChefao = tirosChefao.get(j);
+                formaTiroChefao = tempTiroChefao.getBounds();
+
+                if (formaTiro.intersects(formaTiroChefao)) {
+                    tempTiroChefao.setVisivel(false);
+                    temptiro.setVisible(false);
+                }
+            }
+        }
+
+        for (int i = 0; i < tiros2.size(); i++) {
+            Tiro temptiro = tiros2.get(i);
+            formaTiro2 = temptiro.getBounds();
+
+            for (int j = 0; j < inimigosComuns.size(); j++) {
+                InimigoComum tempRedUfo = inimigosComuns.get(j);
+                formaInimigo1 = tempRedUfo.getBounds();
+
+                if (formaTiro2.intersects(formaInimigo1)) {
+                    player1.somarScore();
+                    tempRedUfo.setVisible(false);
+                    temptiro.setVisible(false);
+                    break;
+                }
+
+            }
+
+            for (int j = 0; j < inimigosAtiradores.size(); j++) {
+                InimigoAtirador tempGreenFire = inimigosAtiradores.get(j);
+                formaInimigo2 = tempGreenFire.getBounds();
+
+                if (formaTiro2.intersects(formaInimigo2)) {
+                    player1.somarScore();
+                    tempGreenFire.setVisible(false);
+                    temptiro.setVisible(false);
+                    break;
+                }
+
+            }
+
+            if (formaTiro2.intersects(formaChefao)) {
+                chefao.setHit(true);
+                int a = tempchefao.getVida();
+                if (a < 120) {
+                    temptiro.setVisible(false);
+                    tempchefao.setVida(a + 1);
+                }
+                if (a > 119) {
+                    tempchefao.setVisivel(false);
+                    temptiro.setVisible(false);
+                    youWin = true;
+                }
+            }
+
+            for(int j=0 ; j<tirosChefao.size() ; j++) {
+
+                if (formaTiro2.intersects(tirosChefao.get(j).getBounds()))
+                {
+                    temptiro.setVisible(false);
+                    tirosChefao.get(j).setVisivel(false);
+                }
+            }
         }
 
         // Vidas spawnadas
@@ -406,85 +866,89 @@ public class Fase extends JPanel implements ActionListener, MouseListener {
         Rectangle formaPowerUpVida;
 
         for (int i = 0; i < vidas.size(); i++) {
-			Vida tempPowerUpVida = vidas.get(i);
-			formaPowerUpVida = tempPowerUpVida.getBounds();
+            Vida tempPowerUpVida = vidas.get(i);
+            formaPowerUpVida = tempPowerUpVida.getBounds();
 
-			if (formaNave.intersects(formaPowerUpVida)) {
-				if (player1.getVida() < 5) {
-					player1.setVida(player1.getVida() + 1);
-					vidas.remove(i);
-				}
-                break;
-			}
+            if(player1.isVisible()) {
+                if (formaNave.intersects(formaPowerUpVida)) {
+                    if (player1.getVida() < 5) {
+                        player1.setVida(player1.getVida() + 1);
+                        vidas.remove(i);
+                    }
+                    break;
+                }
+            }
+
+            if(player2.isVisible()) {
+                if (formaNave2.intersects(formaPowerUpVida)) {
+                    if (player2.getVida() < 5) {
+                        player2.setVida(player2.getVida() + 1);
+                        vidas.remove(i);
+                    }
+                    break;
+                }
+            }
         }
-
     }
 
     // Temporizador
-	public void waitForSeconds() {
-		Timer timer;
-		Timer timer2;
-		Timer timerChefao;
+    public void waitForSeconds() {
+        Timer timer;
+        Timer timer2;
+        Timer timerChefao;
+        Timer timerInimigos2;
 
-		timer = new Timer(2000, new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				for (int i = 0; i < explosoes.size(); i++) {
-					explosoes.get(i).setVisivel(false);
-				}
-			}
+        timer = new Timer(2000, new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                for (int i = 0; i < explosoes.size(); i++) {
+                    explosoes.get(i).setVisible(false);
+                }
 
-		});
+            }
+        });
+        timer.start();
 
-		timer.start();
-	}
+        timer2 = new Timer(200, new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                if (chefao.isHit() == true) {
+                    chefao.setHit(false);
+                }
+            }
+
+        });
+        timer2.start();
+
+        timerChefao = new Timer(100000, new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                chefao.setVisivel(true);
+            }
+        });
+        timerChefao.start();
+
+        timerInimigos2  = new Timer(45000, new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                inicializarInimigos2();
+            }
+
+        });
+        timerInimigos2.start();
+    }
 
     private class TecladoAdapter extends KeyAdapter {
         @Override
         public void keyPressed(KeyEvent e) {
-            player1.keyPressed(e);
+            if(player1.isVisible())
+                player1.keyPressed(e);
+            if(player2.isVisible())
+                player2.keyPressed(e);
+
         }
-    
+
         @Override
         public void keyReleased(KeyEvent e) {
             player1.keyReleased(e);
+            player2.keyReleased(e);
         }
     }
 
-     private class MouseAdaptado extends MouseAdapter {
-        @Override
-        public void mousePressed(MouseEvent e) {
-            if(emJogo)
-            player1.mousePressed(e);
-        }
-    }
-
-    @Override
-    public void mouseClicked(MouseEvent e) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'mouseClicked'");
-    }
-
-    @Override
-    public void mousePressed(MouseEvent e) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'mousePressed'");
-    }
-
-    @Override
-    public void mouseReleased(MouseEvent e) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'mouseReleased'");
-    }
-
-    @Override
-    public void mouseEntered(MouseEvent e) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'mouseEntered'");
-    }
-
-    @Override
-    public void mouseExited(MouseEvent e) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'mouseExited'");
-    }
 }
